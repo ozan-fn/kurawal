@@ -4,10 +4,15 @@
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@import './dataTables.dataTables.css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+    --color-primary: #696cff;
+    --color-primary-muted: #696cff29;
+    --color-muted: #f2f3f3;
+
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
