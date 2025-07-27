@@ -19,49 +19,71 @@ class PostController extends Controller
      */
     public function index(Request $request): View | JsonResponse
     {
-        if ($request->ajax()) {
-            $data = Post::query();
-            return DataTables::eloquent($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-                    $showBtn = view('components.button', [
-                        'as' => 'a',
-                        'href' => route('posts.show', $row->id),
-                        'variant' => 'secondary',
-                        'icon' => 'eye', // Ikon mata dari Lucide
-                        'size' => 'sm',
-                    ])->with('slot', 'Lihat')->render();
+        return view('post.index');
+    }
 
-                    $editBtn = view('components.button', [
-                        'as' => 'a',
-                        'href' => route('posts.edit', $row->id),
-                        'variant' => 'primary',
-                        'icon' => 'edit-3',
-                        'size' => 'sm',
-                    ])->with('slot', 'Edit')->render();
+    public function getData(Request $request): JsonResponse
+    {
+        // --- Helper functions didefinisikan sebagai closure lokal ---
+        $getSqlOperator = function (string $type): string {
+            return match ($type) {
+                'equals' => '=',
+                'notEqual' => '!=',
+                'lessThan' => '<',
+                'lessThanOrEqual' => '<=',
+                'greaterThan' => '>',
+                'greaterThanOrEqual' => '>=',
+                'contains' => 'LIKE',
+                default => '=',
+            };
+        };
 
-                    $deleteUrl = route('posts.destroy', $row->id);
-                    $deleteBtn = view('components.button', [
-                        'type' => 'submit',
-                        'variant' => 'danger',
-                        'icon' => 'trash-2',
-                        'size' => 'sm',
-                        'onclick' => "return confirm('Anda yakin ingin menghapus data ini?')"
-                    ])->with('slot', 'Hapus')->render();
-                    $deleteForm = '<form action="' . $deleteUrl . '" method="POST" class="inline-block">' .
-                        csrf_field() . method_field('DELETE') . $deleteBtn . '</form>';
+        $applyFilter = function ($query, $colId, $filter) use ($getSqlOperator) {
+            switch ($filter['filterType']) {
+                case 'text':
+                    $operator = $getSqlOperator($filter['type']);
+                    $value = ($filter['type'] === 'contains') ? '%' . $filter['filter'] . '%' : $filter['filter'];
+                    $query->where($colId, $operator, $value);
+                    break;
+                case 'number':
+                    $operator = $getSqlOperator($filter['type']);
+                    $query->where($colId, $operator, $filter['filter']);
+                    break;
+            }
+        };
+        // --- Akhir dari helper functions ---
 
-                    return '<div class="flex items-center gap-2">' . $showBtn . $editBtn . $deleteForm . '</div>';
-                })
-                ->editColumn('description', function ($row) {
-                    $shortText = Str::limit($row->description, 100, '...');
-                    return e($shortText);
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+
+        // 1. Mulai query dengan Eloquent
+        $query = Post::query();
+
+        // 2. Terapkan Filter
+        $filterModel = $request->input('filterModel', []);
+        foreach ($filterModel as $colId => $filter) {
+            $applyFilter($query, $colId, $filter);
         }
 
-        return view('post.index');
+        // 3. Ambil total baris SETELAH difilter
+        $totalCount = $query->count();
+
+        // 4. Terapkan Sorting
+        $sortModel = $request->input('sortModel', []);
+        foreach ($sortModel as $sort) {
+            $query->orderBy($sort['colId'], $sort['sort']);
+        }
+
+        // 5. Terapkan Pagination
+        $startRow = $request->input('startRow', 0);
+        $endRow = $request->input('endRow', 100);
+        $limit = $endRow - $startRow;
+
+        $rows = $query->offset($startRow)->limit($limit)->get();
+
+        // 6. Kembalikan data dalam format JSON yang diharapkan AG Grid
+        return response()->json([
+            'rows' => $rows,
+            'lastRow' => $totalCount,
+        ]);
     }
 
     /**

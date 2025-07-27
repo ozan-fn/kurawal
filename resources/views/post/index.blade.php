@@ -10,10 +10,6 @@
             <div class="p-6 overflow-auto bg-white shadow sm:rounded-md flex-1">
                 <div class="w-full">
                     <div class="sm:flex sm:items-center">
-                        {{-- <div class="sm:flex-auto">
-                            <h1 class="text-base font-semibold leading-6 text-gray-900">{{ __('Posts') }}</h1>
-                            <p class="mt-2 text-sm text-gray-700">A list of all the {{ __('Posts') }}.</p>
-                        </div> --}}
                         <div class="mt-4 sm:mt-0 sm:flex-none">
                             <a href="{{ route('posts.create') }}">
                                 <x-button type="button" class="gap-2">
@@ -25,30 +21,7 @@
                     </div>
 
                     <div class="mt-6 overflow-auto">
-                        <table id="my-table" class="display">
-                            <thead>
-                                <tr>
-                                    <th>NO</th>
-                                    <th>NAME</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>ACTION</th>
-                                </tr>
-                            </thead>
-                            {{-- <tbody> --}}
-                            {{-- @foreach ($posts as $index => $post)
-                                            <tr class="even:bg-white odd:bg-muted">
-                                                <td class="text-sm py-3 border-b px-6">{{ $i + $index + 1 }}</td>
-                                                <td class="text-sm py-3 border-b px-6 text-start">
-                                                    {{ $post->name }}</td>
-                                                <td class="text-sm py-3 border-b px-6 text-start">
-                                                    {{ $post->description }}</td>
-                                            </tr>
-                                        @endforeach --}}
-                            {{-- </tbody> --}}
-                        </table>
-                        {{-- <div class="mt-4">
-                                    {{ $posts->links() }}
-                                </div> --}}
+                        <div id="myGrid" class="ag-theme-quartz" style="height: 600px; width: 100%;"></div>
                     </div>
                 </div>
             </div>
@@ -56,51 +29,125 @@
     </div>
 
     @push('css')
-        {{-- <link rel="stylesheet" href="{{ asset('assets/css/dataTables.dataTables.css') }}"> --}}
+        {{-- CUKUP SATU FILE CSS TEMA MODERN --}}
+        <link href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-quartz.css" rel="stylesheet" />
     @endpush
 
     @push('js')
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+        {{-- MEMUAT LIBRARY AG GRID COMMUNITY --}}
+        <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js" defer></script>
+
+        {{-- JIKA ANDA MENGGUNAKAN LUCIDE ICONS, PASTIKAN LIBRARY-NYA JUGA DIMUAT --}}
+        {{-- <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script> --}}
 
         <script>
-            $('#my-table').DataTable({
-                processing: true,
-                serverSide: true,
-                scrollCollapse: true,
-                scrollX: true,
-                // scrollY: "100vh",
-                ajax: "{{ route('posts.index') }}",
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'description',
-                        name: 'description'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-                drawCallback: function(settings) {
-                    lucide.createIcons();
+            document.addEventListener('DOMContentLoaded', function() {
+
+                 const columnDefs = [
+    {
+        headerName: 'NO',
+        valueGetter: 'node.rowIndex + 1',
+        width: 80,
+        pinned: 'left',
+        sortable: false,
+        filter: false
+    },
+    {
+        headerName: 'NAME',
+        field: 'name',
+        filter: 'agTextColumnFilter',
+        minWidth: 150
+    },
+    {
+        headerName: 'DESCRIPTION',
+        field: 'description',
+        filter: 'agTextColumnFilter',
+        minWidth: 250
+    },
+    {
+        headerName: '⋮',
+        pinned: 'right',
+        width: 100,
+        field: 'actions',
+        sortable: false,
+        filter: false,
+        suppressHeaderMenuButton: true, // Gantikan suppressMenu
+        cellRenderer: (params) => {
+            if (!params.data || !params.data.id) return '';
+
+            const editUrl = `{{ url('posts') }}/${params.data.id}/edit`;
+            const deleteUrl = `{{ url('posts') }}/${params.data.id}`;
+            const csrfToken = '{{ csrf_token() }}';
+
+            const container = document.createElement('div');
+            container.className = "flex items-center gap-2";
+            container.innerHTML = `
+                <a href="${editUrl}" title="Edit">
+                    <i class="w-5 h-5 text-blue-600" data-lucide="file-pen-line"></i>
+                </a>
+                <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');" style="display:inline;">
+                    <input type="hidden" name="_token" value="${csrfToken}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="bg-transparent border-none p-0 cursor-pointer" title="Hapus">
+                        <i class="w-5 h-5 text-red-600" data-lucide="trash-2"></i>
+                    </button>
+                </form>
+            `;
+            return container;
+        }
+    }
+];
+
+                // Opsi Grid (Grid Options) untuk Client-Side
+                const gridOptions = {
+                    columnDefs: columnDefs,
+                rowModelType: 'infinite',
+                pagination: true,
+                paginationPageSize: 20,
+                cacheBlockSize: 20,
+                animateRows: true,
+                defaultColDef: {
+                    sortable: true,
+                    filter: true,
+                    floatingFilter: true,
+                    resizable: true,
                 },
-                language: {
-                    search: "",
-                    searchPlaceholder: "Ketik untuk mencari..." // Menambahkan placeholder ke dalam input
-                }
+                    datasource: {
+                        getRows: (params) => {
+
+                            fetch("{{ route('posts.data') }}", {
+                                    method: 'post',
+                                    body: JSON.stringify(params),
+                                    credentials: 'include',
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    }
+                                })
+                                .then(httpResponse => httpResponse.json())
+                                .then(response => {
+                                    // Berikan data ke grid jika berhasil
+                                    params.successCallback(response.rows, response.lastRow);
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    // Beritahu grid jika gagal
+                                    // params.failCallback();
+                                });
+                        }
+                    },
+                    // Panggil createIcons setiap kali baris dirender ulang (opsional, tapi bagus untuk filter/sort)
+                    onRowDataUpdated: () => {
+                        if (typeof lucide !== 'undefined') {
+                            setTimeout(() => lucide.createIcons(), 0);
+                        }
+                    },
+                };
+
+                // Buat Grid
+                const gridDiv = document.querySelector('#myGrid');
+                agGrid.createGrid(gridDiv, gridOptions);
             });
         </script>
     @endpush
-
-</x-app-layout>
+</x-layouts.app>

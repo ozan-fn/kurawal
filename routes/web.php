@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('posts', PostController::class);
+    Route::post('posts-data', [PostController::class, 'getData'])->name('posts.data');
 });
 
 // require __DIR__ . '/settings.php';

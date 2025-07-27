@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d09410131ad1cf1bd2e401aede490f8c",
+    "content-hash": "7660b2695c909b46add2dcbd14c5a3e5",
     "packages": [
         {
             "name": "brick/math",
@@ -3947,6 +3947,49 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.9.0"
             },
             "time": "2025-06-25T14:20:11+00:00"
+        },
+        {
+            "name": "sameer1750/ag-grid-api",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sameer1750/laravel-aggrid-api.git",
+                "reference": "734b5fd1baa45053c95d8305ff3651c07810adf1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sameer1750/laravel-aggrid-api/zipball/734b5fd1baa45053c95d8305ff3651c07810adf1",
+                "reference": "734b5fd1baa45053c95d8305ff3651c07810adf1",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Radix\\Aggrid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sameer Shaikh",
+                    "email": "sameernasirshaikh@gmail.com"
+                }
+            ],
+            "description": "A package to generate ag-grid api",
+            "keywords": [
+                "ag grid",
+                "aggrid",
+                "aggrid api",
+                "laravel ag grid"
+            ],
+            "support": {
+                "issues": "https://github.com/sameer1750/laravel-aggrid-api/issues",
+                "source": "https://github.com/sameer1750/laravel-aggrid-api/tree/master"
+            },
+            "time": "2020-06-16T11:05:57+00:00"
         },
         {
             "name": "symfony/clock",
