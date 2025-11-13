@@ -1,5 +1,6 @@
 import express, { type Express } from "express";
 import path from "path";
+import { connectDB } from "./middlewares/databaseMiddleware";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
@@ -7,6 +8,7 @@ import postRoutes from "./routes/postRoutes";
 const app: Express = express();
 
 app.use(express.json());
+app.use(connectDB);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);

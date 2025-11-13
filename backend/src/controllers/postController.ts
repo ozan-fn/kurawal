@@ -72,7 +72,6 @@ export const deletePost = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         const post = await Post.findByIdAndDelete(id);
-        console.log("Deleted post:", post ? "YES" : "NO");
 
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
