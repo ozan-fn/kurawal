@@ -2,7 +2,12 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { IUser } from "../models/User";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "BRT0vrxN5ekjDWKgu3fD";
+
+if (!JWT_SECRET) {
+    console.log("JWT is Undefined");
+    
+}
 
 export interface JWTPayload {
     id: string;
