@@ -11,3 +11,4 @@ router.put("/:id", authenticateToken, updatePost);
 router.delete("/:id", authenticateToken, deletePost);
 
 export default router;
+  
