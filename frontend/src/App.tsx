@@ -4,14 +4,14 @@ import nprogress from "nprogress";
 
 import "nprogress/nprogress.css";
 
-import Home from "./pages/Home";
-import NotFound from "./pages/NotFound";
-import TestProgress from "./pages/TestProgress";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-import Posts from "./pages/posts/Posts";
-import CreatePost from "./pages/posts/CreatePost";
-import EditPost from "./pages/posts/EditPost";
+import Home from "./features/home/Home";
+import NotFound from "./features/NotFound";
+import TestProgress from "./features/TestProgress";
+import Login from "./features/auth/Login";
+import Register from "./features/auth/Register";
+import Posts from "./features/posts/Posts";
+import CreatePost from "./features/posts/CreatePost";
+import EditPost from "./features/posts/EditPost";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
