@@ -1,5 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Fredoka:wght@300..700&display=swap");
+
+body {
+	font-family: "Fredoka", sans-serif;
+}
+
+@layer utilities {
+	.font-caveat {
+		font-family: "Caveat", cursive;
+	}
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -56,18 +67,44 @@
 
 	--animate-marquee: marquee var(--duration) infinite linear;
 
-	--animate-marquee-vertical: marquee-vertical var(--duration) linear infinite
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(-100% - var(--gap)));
+		}
+	}
+	@keyframes marquee-vertical {
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(-100% - var(--gap)));
+		}
+	}
+	--animate-blink-cursor: blink-cursor 1.2s step-end infinite;
+	@keyframes blink-cursor {
+		0%,
+		49% {
+			opacity: 1;
+		}
+		50%,
+		100% {
+			opacity: 0;
+		}
+	}
+	--animate-orbit: orbit calc(var(--duration)*1s) linear infinite
 ;
-  @keyframes marquee {
-  from {
-    transform: translateX(0);}
-  to {
-    transform: translateX(calc(-100% - var(--gap)));}}
-  @keyframes marquee-vertical {
-  from {
-    transform: translateY(0);}
-  to {
-    transform: translateY(calc(-100% - var(--gap)));}}}
+  @keyframes orbit {
+  0% {
+    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+		}
+  100% {
+    transform: rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg));
+		}
+	}}
 
 :root {
 	--radius: 0.625rem;
