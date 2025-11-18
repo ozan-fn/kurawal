@@ -13,12 +13,20 @@ export function OrbitingCirclesGrid() {
 			</OrbitingCircles>
 
 			{/* Tools & Infra */}
-			<OrbitingCircles iconSize={30} radius={110} reverse speed={2.2}>
+			<OrbitingCircles iconSize={30} radius={110} reverse speed={1.6}>
 				<Icons.docker />
 				<Icons.github />
 				<Icons.vercel />
 				<Icons.firebase />
 				<Icons.authjs />
+			</OrbitingCircles>
+
+			<OrbitingCircles iconSize={50} radius={210} reverse speed={2.0}>
+				<Icons.react />
+				<Icons.nextjs />
+				<Icons.go />
+				<Icons.prisma />
+				<Icons.tailwind />
 			</OrbitingCircles>
 		</div>
 	);

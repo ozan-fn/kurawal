@@ -1,4 +1,3 @@
-"use client";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
@@ -34,12 +33,12 @@ export const CardStack = ({ items, offset, scaleFactor }: { items: Card[]; offse
 	};
 
 	return (
-		<div className="relative h-60 w-60 md:h-20 md:w-96">
+		<div className="relative h-60 w-60 md:h-20 md:w-120">
 			{cards.map((card, index) => {
 				return (
 					<motion.div
 						key={card.id}
-						className="absolute flex h-auto w-80 flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-md shadow-black/10 md:w-96 dark:border-white/10 dark:bg-black dark:shadow-white/5"
+						className="absolute flex h-auto w-80 flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-md shadow-black/10 md:w-120 dark:border-white/10 dark:bg-black dark:shadow-white/5"
 						style={{ transformOrigin: "top center" }}
 						animate={{
 							top: index * -CARD_OFFSET,
