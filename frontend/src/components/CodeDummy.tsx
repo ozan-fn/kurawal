@@ -12,7 +12,7 @@ export const CodeDummy = ({ duration, delay, writing, cursor }: CodeDummyProps) 
 	return (
 		<Code
 			key={`${duration}-${delay}-${writing}-${cursor}`}
-			className="p- h-[340px] w-[420px]"
+			className="p- h-[340px] w-full"
 			code={`'use client';
  
 import * as React from "react";
@@ -30,7 +30,9 @@ export function MyComponent({ myProps, children, ...rest }: MyComponentProps) {
   );
 }`}
 		>
-			<CodeHeader icon={FileText} copyButton>my-component.tsx</CodeHeader>
+			<CodeHeader icon={FileText} copyButton>
+				my-component.tsx
+			</CodeHeader>
 
 			<CodeBlock cursor={cursor} lang="tsx" writing={writing} duration={duration} delay={delay} />
 		</Code>

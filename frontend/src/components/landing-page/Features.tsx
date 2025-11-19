@@ -8,7 +8,7 @@ import cethaDemo from "@/assets/images/cetha-demo.png";
 import cethaJob from "@/assets/images/cetha-jobs.png";
 import cethaRecomendation from "@/assets/images/cetha-recomendation.png";
 
-const Features = () => {
+const FeaturesSection = () => {
 	return (
 		<>
 			<hr className="-mb-px w-full border-dashed" />
@@ -25,11 +25,10 @@ const Features = () => {
 						<p className="mx-auto mt-2 max-w-2xl text-neutral-700 dark:text-neutral-400">From thoughtful design to robust development, we craft solutions that are intentional, effective, and built to last.</p>
 					</div>
 
-					<div className="mt-12 grid grid-cols-5 overflow-hidden border-t border-dashed">
-						{/* GRID 1 */}
-						<div className="relative col-span-3 overflow-hidden border-r border-b border-dashed p-0.5">
+					<div className="mt-12 grid grid-cols-2 overflow-hidden border-t border-dashed">
+						<div className="relative col-span-2 overflow-hidden border-r border-b border-dashed p-0.5">
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-								<div className="flex-1 p-6">
+								<div className="flex-1 translate-y-1/4 p-6">
 									<h2 className="text-start text-2xl font-bold text-neutral-800 dark:text-neutral-100">Any Stack. Any Vision. One Team.</h2>
 									<p className="mt-4 text-start text-neutral-600 dark:text-neutral-400">We bring your wildest ideas to life using the exact tools you love Next.js, Remix, Nuxt, Laravel, Node, Flutter, or anything bleeding-edge. Scalable, secure, lightning-fast, and launched on time.</p>
 								</div>
@@ -46,33 +45,33 @@ const Features = () => {
 							</div>
 						</div>
 
-						{/* GRID 2 */}
 						<div className="relative col-span-2 overflow-hidden border-b border-dashed p-0.5">
-							<div className="flex-col">
-								<div className="p-6">
-									<h2 className="text-start text-2xl font-bold text-neutral-800 dark:text-neutral-100">You Own Every Line of Code</h2>
-									<p className="mt-4 text-start text-neutral-600 dark:text-neutral-400">No black boxes, no lock-in, no hidden sauce. We build with battle-tested, open tools Tailwind, Next.js, Prisma, Vercel and hand you clean, production-ready code you can run, extend, or sell tomorrow.</p>
+							<div className="flex items-center py-12">
+								<div className="flex-1 items-center justify-end">
+									<div className="">
+										<CardStackGrid />
+										<div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-b from-white to-transparent dark:from-neutral-950" />
+									</div>
 								</div>
-								<div className="items-center justify-center lg:pt-12">
-									<CardStackGrid />
-
-									<div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-b from-white to-transparent dark:from-neutral-950" />
+								<div className="flex-1 p-6">
+									<h2 className="text-start text-2xl font-bold text-neutral-800 dark:text-neutral-100">You Own Every Line of Code</h2>
+									<p className="mt-4 text-start text-neutral-600 dark:text-neutral-400">No black boxes, no lock-in, no hidden sauce. We build with battle tested, open tools Tailwind, Next.js, Prisma, Vercel and hand you clean, production-ready code you can run, extend, or sell tomorrow.</p>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div className="grid grid-cols-3 overflow-hidden border-b border-dashed">
+					<div className="grid grid-cols-2 overflow-hidden border-b border-dashed">
 						<div className="col-span-1 grid overflow-hidden border-r border-dashed p-0.5">
 							<div className="px-6 pt-6">
 								<h2 className="text-start text-2xl font-bold text-neutral-800 dark:text-neutral-100">We Make Your Website Think</h2>
 								<p className="mt-4 text-start text-neutral-600 dark:text-neutral-400">Smart chat, personalized journeys, predictive search, and AI automation turning every visitor into a loyal customer.</p>
 							</div>
 							<div className="relative p-6">
-								<div className="relative rounded-sm border">
+								<div className="relative">
 									<motion.img
 										src={cethaDemo}
 										alt="cetha demo"
-										className="rounded-sm"
+										className="rounded-sm border"
 										animate={{ y: [0, -10, 0] }}
 										transition={{
 											duration: 4,
@@ -82,7 +81,7 @@ const Features = () => {
 									/>
 
 									<motion.div
-										className="absolute top-35 -left-3 -translate-y-1/2 -rotate-12 rounded-sm border"
+										className="absolute top-60 -left-2 -translate-y-1/2 -rotate-12 rounded-sm border"
 										animate={{ y: [0, -12, 0] }}
 										transition={{
 											duration: 5,
@@ -95,7 +94,7 @@ const Features = () => {
 									</motion.div>
 
 									<motion.div
-										className="absolute top-35 -right-4 -translate-y-1/2 rotate-12 rounded-sm border"
+										className="absolute top-5 -right-2 -translate-y-1/2 rotate-12 rounded-sm border"
 										animate={{ y: [0, -8, 0] }}
 										transition={{
 											duration: 4.5,
@@ -109,16 +108,16 @@ const Features = () => {
 								</div>
 							</div>
 						</div>
-						<div className="col-span-2 grid overflow-hidden p-0.5">
-							<div className="flex">
-								<div className="p-6 text-start">
-									<CodeDummy duration={200} delay={0} writing={true} cursor={true} />
-								</div>
+						<div className="col-span-1 grid overflow-hidden p-0.5">
+							<div className="flex-col">
 								<div className="flex-1">
 									<div className="p-6">
 										<h2 className="text-start text-2xl font-bold text-neutral-800 dark:text-neutral-100">Beautiful Outside. Bulletproof Inside.</h2>
 										<p className="mt-4 text-start text-neutral-600 dark:text-neutral-400">Every line of code is written like it's going to be studied in a museum. Performant, maintainable, and built to evolve with your company for the next decade.</p>
 									</div>
+								</div>
+								<div className="p-6 text-start">
+									<CodeDummy duration={200} delay={0} writing={true} cursor={true} />
 								</div>
 							</div>
 						</div>
@@ -129,4 +128,4 @@ const Features = () => {
 	);
 };
 
-export default Features;
+export default FeaturesSection;
