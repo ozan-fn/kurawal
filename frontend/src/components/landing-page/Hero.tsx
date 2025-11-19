@@ -91,7 +91,7 @@ const HeroSection = () => {
 				</div>
 
 				<div className="z-10justify-center">
-					<div className="flex gap-5">
+					<div className="flex flex-wrap gap-5">
 						{framework.map((item, i) => (
 							<img key={i} src={item} alt="tech stack" className="h-7 grayscale" />
 						))}

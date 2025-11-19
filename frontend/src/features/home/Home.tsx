@@ -1,6 +1,8 @@
+import CallToAction from "@/components/landing-page/CallToAction";
 import FeaturesSection from "@/components/landing-page/Features";
 import HeroSection from "@/components/landing-page/Hero";
 import PortofolioSection from "@/components/landing-page/Portofolio";
+import ServicesSection from "@/components/landing-page/Services";
 
 export default function HomePage() {
 	return (
@@ -8,6 +10,8 @@ export default function HomePage() {
 			<HeroSection />
 			<FeaturesSection />
 			<PortofolioSection />
+			<ServicesSection />
+			<CallToAction />
 		</>
 	);
 }

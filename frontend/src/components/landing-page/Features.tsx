@@ -26,9 +26,9 @@ const FeaturesSection = () => {
 					</div>
 
 					<div className="mt-12 grid grid-cols-2 overflow-hidden border-t border-dashed">
-						<div className="relative col-span-2 overflow-hidden border-r border-b border-dashed p-0.5">
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-								<div className="flex-1 translate-y-1/4 p-6">
+						<div className="relative col-span-2 overflow-hidden border-b border-dashed p-0.5">
+							<div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
+								<div className="flex-1 p-6">
 									<h2 className="text-start text-2xl font-bold text-neutral-800 dark:text-neutral-100">Any Stack. Any Vision. One Team.</h2>
 									<p className="mt-4 text-start text-neutral-600 dark:text-neutral-400">We bring your wildest ideas to life using the exact tools you love Next.js, Remix, Nuxt, Laravel, Node, Flutter, or anything bleeding-edge. Scalable, secure, lightning-fast, and launched on time.</p>
 								</div>
