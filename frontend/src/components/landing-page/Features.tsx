@@ -48,7 +48,7 @@ const FeaturesSection = () => {
 						<div className="relative col-span-2 overflow-hidden border-b border-dashed p-0.5">
 							<div className="flex items-center py-12">
 								<div className="flex-1 items-center justify-end">
-									<div className="">
+									<div>
 										<CardStackGrid />
 										<div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-b from-white to-transparent dark:from-neutral-950" />
 									</div>

@@ -35,11 +35,11 @@ export default function Navbar() {
 	}, []);
 
 	return (
-		<header className="sticky top-0 z-50 h-14 border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md">
+		<header className="sticky top-0 z-50 h-12 border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md md:h-14">
 			<nav className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between border-dashed px-4 min-[1400px]:border-x">
 				{/* Left */}
 				<div className="flex flex-1 items-center text-lg font-semibold">
-					<img src={isDarkMode ? logoDark : logoLight} alt="Logo" className="h-5 w-auto" />
+					<img src={isDarkMode ? logoDark : logoLight} alt="Logo" className="h-4 w-auto md:h-5" />
 				</div>
 
 				{/* Center */}
@@ -65,7 +65,9 @@ export default function Navbar() {
 						<Github className="h-4 w-4 text-gray-600" />
 					</button>
 
-					<Button>Get Access</Button>
+					<Button asChild>
+						<a href="contact-us">Contact Us</a>
+					</Button>
 				</div>
 
 				{/* Right - Tablet */}
