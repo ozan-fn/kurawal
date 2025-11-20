@@ -4,6 +4,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
 import envRoutes from "./routes/envRoutes";
+import mediaRoutes from "./routes/mediaRoutes";
 
 const app: Express = express();
 
@@ -13,6 +14,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/envs", envRoutes);
+app.use("/api/media", mediaRoutes);
 
 app.get("/api", (req, res) => {
     return res.json({
