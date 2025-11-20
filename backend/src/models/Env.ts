@@ -12,6 +12,7 @@ export interface IEnv extends Document {
 export interface IEnvVar {
   key: string;
   value: string;
+  env_description: string;
   optional?: boolean;
   sensitive?: boolean;
 }
@@ -20,11 +21,12 @@ export interface IEnvVar {
 const EnvVarSchema: Schema = new Schema({
   key: {
     type: String,
-    required: true, // Bisa hapus kalau pure controller validation
   },
   value: {
     type: String,
-    required: true, // Bisa hapus kalau pure controller validation
+  },
+  env_description: {
+    type: String,
   },
   optional: {
     type: Boolean,

@@ -107,9 +107,9 @@ export const createEnv = async (req: AuthRequest, res: Response) => {
 
         // Validasi struktur env array: Tiap item harus punya key & value
         for (const item of envArray) {
-            if (!item.key || typeof item.key !== "string" || !item.value || typeof item.value !== "string") {
+            if (!item.key || typeof item.key !== "string" || !item.value || typeof item.value !== "string" || !item.env_description || typeof item.env_description !== "string") {
                 return res.status(400).json({ 
-                    message: "Each env item must have 'key' (string) and 'value' (string)" 
+                    message: "Each env item must have 'key' (string), 'value' (string), and 'env_description' (string)" 
                 });
             }
 
@@ -145,6 +145,7 @@ export const createEnv = async (req: AuthRequest, res: Response) => {
             env: envArray.map((item: any) => ({
                 key: item.key.trim(),
                 value: item.value.trim(),
+                env_description: item.env_description.trim(),
                 optional: item.optional ?? false, // Default false
                 sensitive: item.sensitive ?? false // Default false
             }))
@@ -231,9 +232,9 @@ export const updateEnv = async (req: AuthRequest, res: Response) => {
             }
 
             for (const item of envArray) {
-                if (!item.key || typeof item.key !== "string" || !item.value || typeof item.value !== "string") {
+                if (!item.key || typeof item.key !== "string" || !item.value || typeof item.value !== "string" || !item.env_description || typeof item.env_description !== "string") {
                     return res.status(400).json({ 
-                        message: "Each env item must have 'key' (string) and 'value' (string)" 
+                        message: "Each env item must have 'key' (string), 'value' (string), and 'env_description' (string)" 
                     });
                 }
 
@@ -262,6 +263,7 @@ export const updateEnv = async (req: AuthRequest, res: Response) => {
             updateData.env = envArray.map((item: any) => ({
                 key: item.key.trim(),
                 value: item.value.trim(),
+                env_description: item.env_description.trim(),
                 optional: item.optional ?? false,
                 sensitive: item.sensitive ?? false
             }));
