@@ -24,6 +24,7 @@ function Home() {
 				</div>
 			</div>
 			<p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+			<iframe src="https://davvcdn.lon1.cdn.digitaloceanspaces.com/89d0c7e26b59a6bdbeb8bfd93365c14f/a1af21b360cadcbee055.html" frameBorder="0" allow="accelerometer; gyroscope; magnetometer"></iframe>
 			<h1 className="mb-4 text-4xl font-extrabold text-gray-900 dark:text-gray-100">Vite + React</h1>
 			<div className="card mb-4 rounded-lg bg-white/80 p-6 shadow-md dark:bg-gray-800/70">
 				<Button onClick={() => setCount((count) => count + 1)}>count is {count}</Button>
@@ -47,7 +48,7 @@ function Home() {
 							</Button>
 						</div>
 						<Button onClick={logout} variant="destructive">
-							Logout
+							Logout jing
 						</Button>
 					</div>
 				) : (
