@@ -1,6 +1,11 @@
 import { Highlighter } from "../ui/highlighter";
+import VideoCard from "../VideoCard";
 
-import aitherway from "@/assets/images/aitherway.jpg";
+import daunesia from "@/assets/video/daunesia.mp4";
+import cetha from "@/assets/video/cetha.mp4";
+import aitherway from "@/assets/video/aitherway.mp4";
+import { Button } from "../ui/button";
+import { ArrowUpRight } from "lucide-react";
 
 const PortofolioSection = () => {
 	return (
@@ -20,15 +25,26 @@ const PortofolioSection = () => {
 					</div>
 
 					<div className="mt-12 grid grid-cols-6 overflow-hidden border-t border-b border-dashed p-0.5">
-						<div className="col-span-2 grid overflow-hidden border-r border-dashed">
-							<img src={aitherway} alt="aitherway" className="object-cover" />
+						<div className="col-span-2 grid overflow-hidden border-r border-dashed p-0.5">
+							<VideoCard src={daunesia} title="Daunesia" desc="UI/UX & Landing Page Development" badges={["UI/UX", "Web Development"]} />
 						</div>
-						<div className="col-span-4 grid h-20 overflow-hidden"></div>
+
+						<div className="col-span-4 grid overflow-hidden p-0.5">
+							<VideoCard src={aitherway} title="Aitherway" desc="Showcase Motion & Interaction" badges={["Motion Graphic", "Interaction"]} />
+						</div>
 					</div>
-					<div className="grid grid-cols-1 overflow-hidden border-b border-dashed">
-						<div className="col-span-2 grid h-20 overflow-hidden border-r border-dashed"></div>
-						<div className="col-span-3 grid h-20 overflow-hidden"></div>
+
+					<div className="grid grid-cols-1 overflow-hidden border-b border-dashed p-0.5">
+						<div className="col-span-1 grid overflow-hidden border-r border-dashed p-0.5">
+							<VideoCard src={cetha} title="Cetha" desc="Branding & Motion Design" badges={["Branding", "Motion Design"]} />
+						</div>
 					</div>
+
+					<Button asChild className="group my-6">
+						<a href="/projects">
+							Show More <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
+						</a>
+					</Button>
 				</div>
 			</section>
 		</>
