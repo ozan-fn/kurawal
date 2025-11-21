@@ -35,7 +35,7 @@ export default function Navbar() {
 	}, []);
 
 	return (
-		<header className="sticky top-0 z-50 h-12 border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md md:h-14">
+		<header className="sticky top-0 z-50 h-12 border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md md:h-14 dark:bg-neutral-900/70">
 			<nav className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between border-dashed px-4 min-[1400px]:border-x">
 				{/* Left */}
 				<div className="flex flex-1 items-center text-lg font-semibold">
@@ -43,10 +43,10 @@ export default function Navbar() {
 				</div>
 
 				{/* Center */}
-				<ul className="hidden items-center gap-6 text-sm text-gray-700 lg:flex">
+				<ul className="hidden items-center gap-6 text-sm text-neutral-800 lg:flex dark:text-neutral-100">
 					{navbarItems.map((item) => (
 						<li key={item.id}>
-							<a href={item.href} className="hover:text-gray-900">
+							<a href={item.href} className="hover:text-neutral-600 dark:hover:text-neutral-300">
 								{item.title}
 							</a>
 						</li>
@@ -55,15 +55,15 @@ export default function Navbar() {
 
 				{/* Right */}
 				<div className="hidden flex-1 items-center justify-end gap-3 lg:flex">
-					<button className="rounded-md p-2 transition hover:bg-gray-100">
-						<Search className="h-4 w-4 text-gray-600" />
+					<button className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+						<Search className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
 					</button>
 
 					<ThemeToggler />
 
-					<button className="rounded-md p-2 transition hover:bg-gray-100">
-						<Github className="h-4 w-4 text-gray-600" />
-					</button>
+					<a href="https://github.com/KurawalCreative" target="_blank" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+						<Github className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
+					</a>
 
 					<Button asChild>
 						<a href="contact-us">Contact Us</a>
@@ -72,38 +72,38 @@ export default function Navbar() {
 
 				{/* Right - Tablet */}
 				<div className="hidden flex-1 items-center justify-end gap-2 md:flex lg:hidden">
-					<button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-center rounded-md p-2 transition hover:bg-gray-100">
-						{isOpen ? <X className="h-5 w-5 text-gray-600" /> : <Menu className="h-5 w-5 text-gray-600" />}
+					<button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-center rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+						{isOpen ? <X className="h-5 w-5 text-neutral-800 dark:text-neutral-100" /> : <Menu className="h-5 w-5 text-neutral-800 dark:text-neutral-100" />}
 					</button>
 
-					<button className="rounded-md p-2 transition hover:bg-gray-100">
-						<Search className="h-4 w-4 text-gray-600" />
+					<button className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+						<Search className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
 					</button>
 
 					<ThemeToggler />
 
-					<button className="rounded-md p-2 transition hover:bg-gray-100">
-						<Github className="h-4 w-4 text-gray-600" />
-					</button>
+					<a href="https://github.com/KurawalCreative" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+						<Github className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
+					</a>
 
 					<Button>Get Access</Button>
 				</div>
 
 				{/* Hamburger Button - Mobile Only */}
-				<button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-center rounded-md p-2 transition hover:bg-gray-100 md:hidden">
-					{isOpen ? <X className="h-5 w-5 text-gray-600" /> : <Menu className="h-5 w-5 text-gray-600" />}
+				<button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-center rounded-md p-2 transition hover:bg-neutral-100 md:hidden dark:hover:bg-neutral-800">
+					{isOpen ? <X className="h-5 w-5 text-neutral-800 dark:text-neutral-100" /> : <Menu className="h-5 w-5 text-neutral-800 dark:text-neutral-100" />}
 				</button>
 			</nav>
 
 			{/* Mobile Menu - Full */}
 			{isOpen && (
-				<div className="border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md md:hidden">
-					<div className="mx-auto max-w-[1400px] px-4 py-4">
+				<div className="border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md md:hidden dark:bg-neutral-900/70">
+					<div className="mx-auto max-w-[1400px] bg-white/70 px-4 py-4 backdrop-blur-md dark:bg-neutral-900/70">
 						{/* Navigation Links */}
-						<ul className="mb-4 space-y-3 border-b border-dashed border-gray-300 pb-4">
+						<ul className="mb-4 space-y-3 border-b border-dashed border-gray-300 pb-4 text-end">
 							{navbarItems.map((item) => (
 								<li key={item.id}>
-									<a href={item.href} className="block text-sm text-gray-700 hover:text-gray-900" onClick={() => setIsOpen(false)}>
+									<a href={item.href} className="block text-sm text-neutral-800 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300" onClick={() => setIsOpen(false)}>
 										{item.title}
 									</a>
 								</li>
@@ -112,16 +112,16 @@ export default function Navbar() {
 
 						{/* Action Buttons */}
 						<div className="flex flex-col gap-3">
-							<div className="flex items-center gap-3">
-								<button className="rounded-md p-2 transition hover:bg-gray-100">
-									<Search className="h-4 w-4 text-gray-600" />
+							<div className="flex items-center justify-end gap-3">
+								<button className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+									<Search className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
 								</button>
 
 								<ThemeToggler />
 
-								<button className="rounded-md p-2 transition hover:bg-gray-100">
-									<Github className="h-4 w-4 text-gray-600" />
-								</button>
+								<a href="https://github.com/KurawalCreative" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+									<Github className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
+								</a>
 							</div>
 
 							<Button>Get Access</Button>
@@ -132,12 +132,12 @@ export default function Navbar() {
 
 			{/* Tablet Menu (md to lg) - Only Navigation Links */}
 			{isOpen && (
-				<div className="hidden border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md md:block lg:hidden">
-					<div className="mx-auto max-w-[1400px] px-4 py-4">
+				<div className="hidden border-b border-dashed border-gray-300 bg-white/70 backdrop-blur-md md:block lg:hidden dark:bg-neutral-900/70">
+					<div className="mx-auto max-w-[1400px] px-4 py-4 text-end">
 						<ul className="space-y-3">
 							{navbarItems.map((item) => (
 								<li key={item.id}>
-									<a href={item.href} className="block text-sm text-gray-700 hover:text-gray-900" onClick={() => setIsOpen(false)}>
+									<a href={item.href} className="block text-sm text-neutral-800 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300" onClick={() => setIsOpen(false)}>
 										{item.title}
 									</a>
 								</li>

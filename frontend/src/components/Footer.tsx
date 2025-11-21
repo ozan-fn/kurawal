@@ -1,9 +1,30 @@
 import { FacebookIcon, GithubIcon, InstagramIcon, LinkedinIcon, TwitterIcon, YoutubeIcon } from "lucide-react";
-import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+
+import logoLight from "@/assets/svg/logo-light-mode.svg";
+import logoDark from "@/assets/svg/logo-dark-mode.svg";
+import { useEffect, useState } from "react";
 
 export function Footer() {
+	const [isDarkMode, setIsDarkMode] = useState(false);
+
+	useEffect(() => {
+		const isDark = document.documentElement.classList.contains("dark");
+		setIsDarkMode(isDark);
+
+		const observer = new MutationObserver(() => {
+			const dark = document.documentElement.classList.contains("dark");
+			setIsDarkMode(dark);
+		});
+
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ["class"],
+		});
+
+		return () => observer.disconnect();
+	}, []);
+
 	const company = [
 		{
 			title: "About Us",
@@ -77,13 +98,13 @@ export function Footer() {
 		},
 	];
 	return (
-		<footer className="relative">
-			<div className={cn("mx-auto max-w-5xl lg:border-x", "dark:bg-[radial-gradient(35%_80%_at_30%_0%,--theme(--color-foreground/.1),transparent)]")}>
-				<div className="absolute inset-x-0 h-px w-full" />
-				<div className="grid max-w-5xl grid-cols-6 gap-6 p-4">
+		<>
+			<hr className="-mb-px w-full border-dashed" />
+			<footer className="relative mx-auto max-w-[1400px] border-dashed pt-12 min-[1400px]:border-x min-[1800px]:max-w-[1536px]">
+				<div className="grid grid-cols-6 gap-6 p-4">
 					<div className="col-span-6 flex flex-col gap-4 pt-5 md:col-span-4">
 						<a className="w-max" href="#">
-							<Logo className="h-5" />
+							<img src={isDarkMode ? logoDark : logoLight} alt="Logo" className="h-4 w-auto md:h-5" />
 						</a>
 						<p className="text-muted-foreground max-w-sm font-mono text-sm text-balance">A comprehensive financial technology platform.</p>
 						<div className="flex gap-2">
@@ -117,11 +138,14 @@ export function Footer() {
 						</div>
 					</div>
 				</div>
-				<div className="bg-border absolute inset-x-0 h-px w-full" />
-				<div className="flex max-w-4xl flex-col justify-between gap-2 py-4">
-					<p className="text-muted-foreground text-center text-sm font-light">&copy; {new Date().getFullYear()} efferd, All rights reserved</p>
+
+				<hr className="-mb-px w-full border-dashed" />
+
+				<div className="flex flex-col justify-between gap-2 py-6">
+					<p className="text-muted-foreground text-center text-sm font-light">&copy; {new Date().getFullYear()} kurawal, All rights reserved</p>
 				</div>
-			</div>
-		</footer>
+			</footer>
+			<hr className="-mb-px w-full border-dashed" />
+		</>
 	);
 }
