@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { type SerializedEditorState } from "lexical";
 
-import { Editor } from "@/components/blocks/editor-00/editor";
+import { Editor } from "@/components/blocks/editor-x/editor";
 
 const initialValue = {
 	root: {

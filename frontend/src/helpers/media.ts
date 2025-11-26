@@ -1,9 +1,30 @@
+import api from "@/utils/api";
 import axios from "axios";
-import { status } from "nprogress";
+
+export interface Media1 {
+	media: Media[];
+	pagination: Pagination;
+}
+
+export interface Media {
+	_id: string;
+	publicId: string;
+	status: string;
+	filename: string;
+	createdAt: string;
+	__v: number;
+}
+
+export interface Pagination {
+	totalItems: number;
+	totalPages: number;
+	currentPage: number;
+	hasNextPage: boolean;
+	hasPrevPage: boolean;
+}
 
 export async function uploadMedia(file: File, onProgress: (file: File, progress: number) => void) {
 	try {
-		const fileType = file.name.split(".").pop();
 		const baseName = file.name.replace(/\.[^/.]+$/, "");
 		const safeBase = baseName
 			.toLocaleLowerCase()
@@ -12,8 +33,9 @@ export async function uploadMedia(file: File, onProgress: (file: File, progress:
 
 		const unique = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : Math.random().toString(36).slice(2, 10);
 
-		const public_id = `${safeBase}-${Date.now}-${unique}.${fileType}`;
-		const result = await axios.post("/api/media/signature", {
+		const extension = file.name.split(".").pop() || "";
+		const public_id = `${safeBase}-${unique}`;
+		const result = await api.post("/media/signature", {
 			public_id: public_id,
 			folder: "media",
 			status: "uploaded",
@@ -41,4 +63,18 @@ export async function uploadMedia(file: File, onProgress: (file: File, progress:
 	} catch (error) {
 		return false;
 	}
+}
+
+export async function getListMedia(page: number = 1, limit: number = 10) {
+	const response = await api.get<Media1>(`/media/listmedia/?page=${page}&limit=${limit}`);
+	return response.data;
+}
+
+export function pathToUrl(path: string) {
+	return `${import.meta.env.VITE_URL_CLOUDINARY}/${path}`;
+}
+
+export async function deleteMedia(public_id: string) {
+	const res = await api.delete(`/media/delete/?public_id=${public_id}`);
+	return res.data;
 }

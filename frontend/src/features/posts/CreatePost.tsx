@@ -15,7 +15,7 @@ import { Alert, AlertDescription } from "../../components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import * as TagInput from "@diceui/tags-input";
 import { type SerializedEditorState } from "lexical";
-import { Editor } from "@/components/blocks/editor-00/editor";
+import { Editor } from "@/components/blocks/editor-x/editor";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Lucide icon
@@ -37,7 +37,7 @@ const initialValue = {
 						format: 0,
 						mode: "normal",
 						style: "",
-						text: "Hello World 🚀",
+						text: "Tuliskan Paragraf indah disini",
 						type: "text",
 						version: 1,
 					},

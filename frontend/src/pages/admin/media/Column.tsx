@@ -7,13 +7,15 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { deleteMedia, pathToUrl } from "@/helpers/media";
 
 export type Media = {
-	id: string;
-	public_id: string;
-	// file_name: string;
-	created_at: string;
-	size: string;
+	_id: string;
+	publicId: string;
+	status: string;
+	filename: string;
+	createdAt: string;
+	__v: number;
 };
 
 // const cloudName = import.meta.en
@@ -27,7 +29,7 @@ export const columns: ColumnDef<Media>[] = [
 		enableHiding: false,
 	},
 	{
-		accessorKey: "public_id",
+		accessorKey: "publicId",
 		header: "Image",
 		cell: ({ getValue, row }) => {
 			const src = getValue<string>();
@@ -37,8 +39,8 @@ export const columns: ColumnDef<Media>[] = [
 					<Dialog>
 						<DialogTrigger asChild>
 							<img
-								src={row.original.public_id}
-								alt={row.original.id}
+								src={pathToUrl(row.original.publicId)}
+								alt={row.original._id}
 								className="h-12 w-12 rounded border object-cover"
 								onError={(e) => {
 									e.currentTarget.src = "https://placehold.net/shape.svg";
@@ -50,8 +52,8 @@ export const columns: ColumnDef<Media>[] = [
 								<DialogTitle>Preview Image</DialogTitle>
 							</DialogHeader>
 							<img
-								src={row.original.public_id}
-								alt={row.original.id}
+								src={pathToUrl(row.original.publicId)}
+								alt={row.original._id}
 								className="h-full w-full rounded border object-cover"
 								onError={(e) => {
 									e.currentTarget.src = "https://placehold.net/shape.svg";
@@ -60,7 +62,7 @@ export const columns: ColumnDef<Media>[] = [
 						</DialogContent>
 					</Dialog>
 
-					{row.original.public_id && <span className="text-muted-foreground max-w-[220px] truncate text-xs">{src}</span>}
+					{row.original.publicId && <span className="text-muted-foreground max-w-[220px] truncate text-xs">{src}</span>}
 				</div>
 			);
 		},
@@ -75,7 +77,7 @@ export const columns: ColumnDef<Media>[] = [
 		header: "",
 		enableSorting: false,
 		enableHiding: false,
-		cell: () => {
+		cell: ({ getValue, row }) => {
 			return (
 				<div className="flex justify-center">
 					<DropdownMenu>
@@ -84,7 +86,9 @@ export const columns: ColumnDef<Media>[] = [
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="w-20" align="center">
 							<DropdownMenuGroup>
-								<DropdownMenuItem className="text-red-500">Hapus</DropdownMenuItem>
+								<DropdownMenuItem onClick={() => deleteMedia(row.original.publicId)} className="text-red-500">
+									Hapus
+								</DropdownMenuItem>
 								<DropdownMenuItem>Edit</DropdownMenuItem>
 							</DropdownMenuGroup>
 						</DropdownMenuContent>

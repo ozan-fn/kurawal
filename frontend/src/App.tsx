@@ -37,7 +37,14 @@ function AppRouter() {
 			<Route path="/register" element={<Register />} />
 
 			{/* Atmin */}
-			<Route path="/admin" element={<Admin />} />
+			<Route
+				path="/admin"
+				element={
+					<ProtectedRoute>
+						<Admin />
+					</ProtectedRoute>
+				}
+			/>
 
 			{/* Protected Routes */}
 			<Route
@@ -48,7 +55,14 @@ function AppRouter() {
 					</ProtectedRoute>
 				}
 			/>
-			<Route path="/create-post" element={<CreatePost />} />
+			<Route
+				path="/create-post"
+				element={
+					<ProtectedRoute>
+						<CreatePost />
+					</ProtectedRoute>
+				}
+			/>
 			<Route
 				path="/edit-post/:id"
 				element={
