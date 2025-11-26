@@ -68,11 +68,11 @@ function AppRouter() {
 
 function App() {
 	return (
-		<AuthProvider>
-			<BrowserRouter>
+		<BrowserRouter>
+			<AuthProvider>
 				<AppRouter />
-			</BrowserRouter>
-		</AuthProvider>
+			</AuthProvider>
+		</BrowserRouter>
 	);
 }
 

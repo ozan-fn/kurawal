@@ -1,6 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+// Set axios to send credentials (cookies)
+axios.defaults.withCredentials = true;
 
 interface User {
 	id: string;
@@ -30,29 +34,36 @@ interface AuthProviderProps {
 	children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-		if (token) {
-			const payload = JSON.parse(atob(token.split(".")[1]));
-			setUser({ id: payload.id, nama: payload.nama, email: payload.email });
+		checkAuth();
+	}, []);
+
+	const checkAuth = async () => {
+		try {
+			const response = await axios.get("/api/auth/me");
+			setUser(response.data);
+		} catch (error: any) {
+			if (error.message === "SESSION_EXPIRED") {
+				navigate("/login");
+			}
+			setUser(null);
 		}
 		setLoading(false);
-	}, []);
+	};
 
 	const login = async (email: string, password: string) => {
 		try {
-			const response = await axios.post("/api/auth/login", { email, password });
-			const { token, refreshToken } = response.data;
-			localStorage.setItem("token", token);
-			localStorage.setItem("refreshToken", refreshToken);
-			// Decode token to get user info (simplified)
-			const payload = JSON.parse(atob(token.split(".")[1]));
-			setUser({ id: payload.id, nama: payload.nama, email: payload.email });
-		} catch (error) {
+			await axios.post("/api/auth/login", { email, password });
+			await checkAuth();
+		} catch (error: any) {
+			if (error.message === "SESSION_EXPIRED") {
+				navigate("/login");
+			}
 			throw error;
 		}
 	};
@@ -62,15 +73,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 			await axios.post("/api/auth/register", { nama, email, password });
 			// After register, auto login
 			await login(email, password);
-		} catch (error) {
+		} catch (error: any) {
+			if (error.message === "SESSION_EXPIRED") {
+				navigate("/login");
+			}
 			throw error;
 		}
 	};
 
-	const logout = () => {
-		localStorage.removeItem("token");
-		localStorage.removeItem("refreshToken");
-		setUser(null);
+	const logout = async () => {
+		try {
+			await axios.post("/api/auth/logout");
+			setUser(null);
+		} catch (error: any) {
+			if (error.message === "SESSION_EXPIRED") {
+				navigate("/login");
+			}
+			// Even if logout fails, clear user
+			setUser(null);
+		}
 	};
 
 	return <AuthContext.Provider value={{ user, login, register, logout, loading }}>{children}</AuthContext.Provider>;
