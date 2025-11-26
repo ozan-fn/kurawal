@@ -10,38 +10,40 @@ import { columns, type Media } from "@/pages/admin/media/Column";
 // import { DataTable } from "@/components/"
 import { Trash2Icon, Upload, X } from "lucide-react";
 import { DataTable } from "@/components/data-table/data-table";
-import { uploadMedia } from "@/helpers/media";
+import { getListMedia, uploadMedia } from "@/helpers/media";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { useDataTable } from "@/hooks/use-data-table";
+import useMediaStore from "@/stores/media-store";
 
 async function getData(): Promise<Media[]> {
-	// Fetch data from your API here.
-	return [
-		{
-			id: "728ed52f",
-			public_id: "0",
-			created_at: "24 June 2025",
-			size: "2.5 MB",
-		},
-		{
-			id: "1131",
-			public_id: "0",
-			created_at: "24 June 2025",
-			size: "2.5 MB",
-		},
-		{
-			id: "121",
-			public_id: "0",
-			created_at: "24 June 2025",
-			size: "2.5 MB",
-		},
+	return (await getListMedia()).media;
+	// return [
+	// 	{
+	// 		id: "728ed52f",
+	// 		public_id: "0",
+	// 		created_at: "24 June 2025",
+	// 		size: "2.5 MB",
+	// 	},
+	// 	{
+	// 		id: "1131",
+	// 		public_id: "0",
+	// 		created_at: "24 June 2025",
+	// 		size: "2.5 MB",
+	// 	},
+	// 	{
+	// 		id: "121",
+	// 		public_id: "0",
+	// 		created_at: "24 June 2025",
+	// 		size: "2.5 MB",
+	// 	},
 
-		// ...
-	];
+	// 	// ...
+	// ];
 }
 
-export function FileUploadValidation() {
+export function FileUploadValidation({ onAfterUpload }: { onAfterUpload?: () => void }) {
+	const refresh = useMediaStore((s) => s.refresh);
 	const [files, setFiles] = React.useState<File[]>([]);
 
 	const onFileValidate = React.useCallback(
@@ -67,24 +69,27 @@ export function FileUploadValidation() {
 		[files],
 	);
 
-	const onUpload: NonNullable<FileUploadProps["onUpload"]> = React.useCallback(async (files, { onProgress, onSuccess, onError }) => {
-		try {
-			const uploadPromises = files.map(async (file) => {
-				try {
-					const result = await uploadMedia(file, onProgress);
-					if (!result) {
-						throw new Error("Gagal Upload");
+	const onUpload: NonNullable<FileUploadProps["onUpload"]> = React.useCallback(
+		async (files, { onProgress, onSuccess, onError }) => {
+			try {
+				const uploadPromises = files.map(async (file) => {
+					try {
+						const result = await uploadMedia(file, onProgress);
+						if (!result) throw new Error("Gagal Upload");
+						onSuccess(file);
+						refresh();
+					} catch (error) {
+						onError(file, error instanceof Error ? error : new Error("Gagal Upload"));
 					}
-					onSuccess(file);
-				} catch (error) {
-					onError(file, error instanceof Error ? error : new Error("Gagal Upload"));
-				}
-			});
-			await Promise.all(uploadPromises);
-		} catch (error) {
-			console.error("Unexpected error during upload:", error);
-		}
-	}, []);
+				});
+				await Promise.all(uploadPromises);
+				onAfterUpload?.(); // penting: segarkan data daftar media
+			} catch (error) {
+				console.error("Unexpected error during upload:", error);
+			}
+		},
+		[onAfterUpload],
+	);
 
 	const onFileReject = React.useCallback((file: File, message: string) => {
 		toast(message, {
@@ -128,29 +133,29 @@ export function FileUploadValidation() {
 }
 
 export default function UploadMedia() {
-	const [data, setData] = React.useState<Media[]>([]);
+	// Ambil hanya slice yang dibutuhkan
+	const fetch = useMediaStore((s) => s.fetch);
+	const refresh = useMediaStore((s) => s.refresh);
+	const loading = useMediaStore((s) => s.loading);
+	const ids = useMediaStore((s) => s.ids);
+	const byId = useMediaStore((s) => s.byId);
+
+	// data tabel dari ids + byId (derivative, murah dihitung)
+	const data = React.useMemo(() => ids.map((id) => byId[id]).filter(Boolean), [ids, byId]);
 
 	React.useEffect(() => {
-		// let mounted = true;
-		(async () => {
-			try {
-				const res = await getData();
-				setData(res);
-			} catch (e) {
-				console.error(e);
-			}
-		})();
-	}, []);
+		fetch({ reset: true });
+	}, [fetch]);
 
 	const { table } = useDataTable({
-		data: data,
+		data,
 		columns,
 		pageCount: 1,
 		initialState: {
 			sorting: [{ id: "title", desc: true }],
 			columnPinning: { right: ["actions"] },
 		},
-		getRowId: (row) => row.id,
+		getRowId: (row) => row._id,
 	});
 
 	return (
@@ -166,20 +171,22 @@ export default function UploadMedia() {
 							<DialogHeader>
 								<DialogTitle>Tambah Media</DialogTitle>
 							</DialogHeader>
-							<FileUploadValidation />
+							<FileUploadValidation onAfterUpload={refresh} />
 							<DialogFooter className="sm:justify-start">
 								<DialogClose asChild>
 									<Button type="button" variant={"secondary"}>
 										Tutup
 									</Button>
 								</DialogClose>
-								<Button variant={"default"}>Simpan</Button>
+								<Button variant={"default"} onClick={refresh} disabled={loading}>
+									{loading ? "Menyegarkan..." : "Refresh"}
+								</Button>
 							</DialogFooter>
 						</DialogContent>
 					</Dialog>
 				</div>
 				<div className="mx-auto mt-4">
-					<DataTable table={table}>{/* <DataTableToolbar table={table} /> */}</DataTable>
+					<DataTable table={table} />
 				</div>
 				<Toaster />
 			</div>
