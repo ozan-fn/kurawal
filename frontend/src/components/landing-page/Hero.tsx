@@ -92,17 +92,17 @@ const HeroSection = () => {
 				</div>
 
 				<div className="z-10 w-full max-w-5xl">
-					<div className="hidden flex-wrap gap-5 lg:flex">
+					<div className="hidden justify-center flex-wrap gap-5 lg:flex">
 						{framework.map((v, i) => (
-							<img key={i} src={v} alt="tech stack" className="h-7 grayscale" />
+							<img key={i} src={v} alt="tech stack" className="h-7 grayscale dark:grayscale-0" />
 						))}
-						<div className="dark mx-2 h-7 w-0.5 bg-neutral-800 dark:bg-neutral-100" />
+						<div className="dark mx-2 h-7 w-0.5 bg-neutral-800 dark:bg-neutral-100 dark:grayscale-0" />
 						{techStack.map((v, i) => (
 							<img key={i} src={v} alt="tech stack" className="h-7 grayscale" />
 						))}
 					</div>
 					<div className="flex lg:hidden">
-						<Marquee pauseOnHover className="grayscale [--duration:10s]">
+						<Marquee pauseOnHover className="grayscale dark:grayscale-0 [--duration:12s]">
 							{frameworkTech.map((v, i) => (
 								<a key={i} href={v} className="flex items-center justify-center">
 									<img src={v} alt="project" className="h-7 w-auto rounded-sm transition hover:opacity-100" />
