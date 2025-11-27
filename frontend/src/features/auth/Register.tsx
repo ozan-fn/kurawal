@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -13,18 +13,20 @@ export default function Register() {
 	const [error, setError] = useState("");
 	const { register, user } = useAuth();
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const redirectTo = searchParams.get("redirect") || "/";
 
 	useEffect(() => {
 		if (user) {
-			navigate("/");
+			navigate(redirectTo);
 		}
-	}, [user, navigate]);
+	}, [user, navigate, redirectTo]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
 			await register(nama, email, password);
-			navigate("/");
+			navigate(redirectTo);
 		} catch (err: any) {
 			setError(err.response?.data?.message || "Registration failed");
 		}
