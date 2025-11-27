@@ -159,6 +159,10 @@ const CardSwap: React.FC<CardSwapProps> = ({ width = 500, height = 400, cardDist
 				node.removeEventListener("mouseenter", pause);
 				node.removeEventListener("mouseleave", resume);
 				clearInterval(intervalRef.current);
+
+				tlRef.current?.kill();
+				tlRef.current = null;
+				clearInterval(intervalRef.current);
 			};
 		}
 		return () => clearInterval(intervalRef.current);
@@ -167,7 +171,7 @@ const CardSwap: React.FC<CardSwapProps> = ({ width = 500, height = 400, cardDist
 	const rendered = childArr.map((child, i) =>
 		isValidElement<CardProps>(child)
 			? cloneElement(child, {
-					key: i,
+					key: child.key ?? i,
 					ref: refs[i],
 					style: { width, height, ...(child.props.style ?? {}) },
 					onClick: (e) => {

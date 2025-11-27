@@ -14,22 +14,22 @@ const FeaturesSection = () => {
 			<hr className="-mb-px w-full border-dashed" />
 			<section className="relative mx-auto max-w-[1400px] border-dashed py-12 min-[1400px]:border-x min-[1800px]:max-w-[1536px]">
 				<div className="z-10 mx-auto text-center">
-					<p className="font-caveat text-xl text-neutral-800 dark:text-neutral-400">
+					<p className="font-caveat text-xl text-neutral-800 dark:text-neutral-100">
 						<Highlighter action="underline" color="" padding={2} strokeWidth={1} iterations={2}>
 							Differentiating Feature
 						</Highlighter>
 					</p>
 
 					<div className="mx-auto mt-5 flex flex-col items-center text-center">
-						<h2 className="max-w-4xl text-center text-3xl leading-tight font-bold text-neutral-800 md:text-4xl lg:text-4xl dark:text-neutral-100">Your Vision, Built With Precision</h2>
-						<p className="mx-auto mt-2 max-w-2xl text-neutral-700 dark:text-neutral-400">From thoughtful design to robust development, we craft solutions that are intentional, effective, and built to last.</p>
+						<h2 className="max-w-4xl text-center text-2xl sm:text-3xl leading-tight font-bold text-neutral-800 md:text-4xl lg:text-4xl dark:text-neutral-100">Your Vision, Built With Precision</h2>
+						<p className="mx-auto mt-2 text-sm md:text-base max-w-2xl text-neutral-700 dark:text-neutral-400">From thoughtful design to robust development, we craft solutions that are intentional, effective, and built to last.</p>
 					</div>
 
 					<div className="mt-12 grid grid-cols-2 overflow-hidden border-t border-dashed">
 						<div className="relative col-span-2 overflow-hidden border-b border-dashed p-0.5">
 							<div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
-								<div className="flex-1 p-6">
-									<h2 className="text-start text-2xl font-bold text-neutral-800 dark:text-neutral-100">Any Stack. Any Vision. One Team.</h2>
+								<div className="flex-1 md:p-6">
+									<h2 className="text-start text-xl lg:text-2xl font-bold text-neutral-800 dark:text-neutral-100">Any Stack. Any Vision. One Team.</h2>
 									<p className="mt-4 text-start text-neutral-600 dark:text-neutral-400">We bring your wildest ideas to life using the exact tools you love Next.js, Remix, Nuxt, Laravel, Node, Flutter, or anything bleeding-edge. Scalable, secure, lightning-fast, and launched on time.</p>
 								</div>
 

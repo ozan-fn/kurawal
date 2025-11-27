@@ -11,7 +11,7 @@ const ShowcaseSection = () => {
 	return (
 		<>
 			<hr className="-mb-px w-full border-dashed" />
-			<section className="relative mx-auto max-w-[1400px] border-dashed py-12 min-[1400px]:border-x min-[1800px]:max-w-[1536px]">
+			<section className="relative mx-auto max-w-[1400px] border-dashed px-4 py-12 min-[1400px]:border-x min-[1800px]:max-w-[1536px]">
 				<div className="z-10 mx-auto text-center">
 					<p className="font-caveat text-xl text-neutral-800 dark:text-neutral-400">
 						<Highlighter action="underline" color="" padding={2} strokeWidth={1} iterations={2}>
@@ -24,18 +24,18 @@ const ShowcaseSection = () => {
 						<p className="mx-auto mt-2 max-w-2xl text-neutral-700 dark:text-neutral-400">Every project reflects our commitment to clarity, creativity, and reliable execution designed to elevate brands with measurable results.</p>
 					</div>
 
-					<div className="mt-12 grid grid-cols-6 overflow-hidden border-t border-b border-dashed p-0.5">
-						<div className="col-span-3 grid overflow-hidden border-r border-dashed p-0.5 md:col-span-2">
+					<div className="mt-12 grid grid-cols-1 overflow-hidden gap-0.5 border border-dashed p-0.5 md:grid-cols-4 lg:grid-cols-6 lg:border-t">
+						<div className="col-span-1 grid overflow-hidden border-b md:border-0 border-dashed p-0.5 md:col-span-2 lg:col-span-2 md:border-r">
 							<VideoCard src={daunesia} title="Daunesia" desc="UI/UX & Landing Page Development" badges={["Ai", "Web Development"]} />
 						</div>
 
-						<div className="col-span-3 grid overflow-hidden p-0.5 md:col-span-4">
+						<div className="col-span-1 grid overflow-hidden border-dashed p-0.5 sm:col-span-3 md:col-span-2 lg:col-span-4">
 							<VideoCard src={aitherway} title="Aitherway" desc="Showcase Motion & Interaction" badges={["Ai", "Web Development"]} />
 						</div>
 					</div>
 
-					<div className="grid grid-cols-1 overflow-hidden border-b border-dashed p-0.5">
-						<div className="col-span-1 grid overflow-hidden border-r border-dashed p-0.5">
+					<div className="grid grid-cols-1 overflow-hidden border border-dashed p-0.5">
+						<div className="col-span-1 grid overflow-hidden border-dashed p-0.5 ">
 							<VideoCard src={cetha} title="Cetha" desc="Branding & Motion Design" badges={["Ai", "Web Development"]} />
 						</div>
 					</div>
