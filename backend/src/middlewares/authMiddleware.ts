@@ -6,7 +6,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "BRT0vrxN5ekjDWKgu3fD";
 
 if (!JWT_SECRET) {
     console.log("JWT is Undefined");
-    
 }
 
 export interface JWTPayload {
@@ -20,8 +19,7 @@ export interface AuthRequest extends Request {
 }
 
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
+    const token = req.cookies.token;
 
     if (!token) {
         return res.status(401).json({ message: "Access token required" });

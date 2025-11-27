@@ -35,10 +35,11 @@ export const register = async (req: Request, res: Response) => {
         const token = jwt.sign({ id: user._id?.toString(), nama: user.nama, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
         const refreshToken = jwt.sign({ id: user._id?.toString() }, REFRESH_SECRET, { expiresIn: "7d" });
 
+        res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 15 * 60 * 1000 }); // 15 minutes
+        res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7 days
+
         res.status(201).json({
             message: "User registered successfully",
-            token,
-            refreshToken,
         });
     } catch (error) {
         console.error("Registration error:", error);
@@ -67,10 +68,11 @@ export const login = async (req: Request, res: Response) => {
         const token = jwt.sign({ id: user._id?.toString(), nama: user.nama, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
         const refreshToken = jwt.sign({ id: user._id?.toString() }, REFRESH_SECRET, { expiresIn: "7d" });
 
+        res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 15 * 60 * 1000 }); // 15 minutes
+        res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7 days
+
         res.json({
             message: "Login successful",
-            token,
-            refreshToken,
         });
     } catch (error) {
         console.error("Login error:", error);
@@ -80,7 +82,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const refreshToken = async (req: Request, res: Response) => {
     try {
-        const { refreshToken } = req.body;
+        const refreshToken = req.cookies.refreshToken;
 
         if (!refreshToken) {
             return res.status(400).json({ message: "Refresh token is required" });
@@ -100,9 +102,11 @@ export const refreshToken = async (req: Request, res: Response) => {
                 const newToken = jwt.sign({ id: user._id?.toString(), nama: user.nama, email: user.email }, JWT_SECRET, { expiresIn: "15m" });
                 const newRefreshToken = jwt.sign({ id: user._id?.toString() }, REFRESH_SECRET, { expiresIn: "7d" });
 
+                res.cookie("token", newToken, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 15 * 60 * 1000 });
+                res.cookie("refreshToken", newRefreshToken, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 7 * 24 * 60 * 60 * 1000 });
+
                 res.json({
-                    token: newToken,
-                    refreshToken: newRefreshToken,
+                    message: "Token refreshed successfully",
                 });
             } catch (dbError) {
                 console.error("Database error during token refresh:", dbError);
@@ -111,6 +115,31 @@ export const refreshToken = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error("Token refresh error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+export const logout = async (req: Request, res: Response) => {
+    try {
+        res.clearCookie("token");
+        res.clearCookie("refreshToken");
+        res.json({ message: "Logged out successfully" });
+    } catch (error) {
+        console.error("Logout error:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+export const me = async (req: Request, res: Response) => {
+    try {
+        // Assuming authenticateToken middleware is used, req.user should be set
+        const user = (req as any).user;
+        if (!user) {
+            return res.status(401).json({ message: "Not authenticated" });
+        }
+        res.json({ id: user.id, nama: user.nama, email: user.email });
+    } catch (error) {
+        console.error("Me error:", error);
         res.status(500).json({ message: "Server error" });
     }
 };

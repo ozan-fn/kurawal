@@ -4,10 +4,10 @@ import AppRouter from "./router/AppRouter";
 
 export default function App() {
 	return (
-		<AuthProvider>
-			<BrowserRouter>
+		<BrowserRouter>
+			<AuthProvider>
 				<AppRouter />
-			</BrowserRouter>
-		</AuthProvider>
+			</AuthProvider>
+		</BrowserRouter>
 	);
 }

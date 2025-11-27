@@ -8,6 +8,9 @@ import privateRoutes from "./PrivateRoutes";
 import ProtectedRoute from "../components/ProtectedRoute";
 import NotFound from "../features/not-found/NotFound";
 import TestProgress from "../features/TestProgress";
+import Admin from "@/pages/admin/Admin";
+import { NuqsAdapter } from "nuqs/adapters/react";
+import UploadMedia from "@/pages/admin/media/UploadMedia";
 
 export default function AppRouter() {
 	const location = useLocation();
@@ -25,6 +28,29 @@ export default function AppRouter() {
 			{publicRoutes.map(({ path, element }) => (
 				<Route key={path} path={path} element={element} />
 			))}
+
+			{/* Atmin */}
+			<Route
+				path="/admin"
+				element={
+					<ProtectedRoute>
+						<Admin />
+					</ProtectedRoute>
+				}
+			/>
+
+			{/* Medie */}
+			<Route
+				path="/media"
+				element={
+					<ProtectedRoute>
+						<NuqsAdapter>
+							{/* <Nuqsad */}
+							<UploadMedia />
+						</NuqsAdapter>
+					</ProtectedRoute>
+				}
+			/>
 
 			{/* Private */}
 			{privateRoutes.map(({ path, element }) => (

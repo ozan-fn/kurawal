@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 interface ProtectedRouteProps {
@@ -10,11 +10,12 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 	const { user, loading } = useAuth();
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return null;
 	}
 
 	if (!user) {
-		return <Navigate to="/login" replace />;
+		const location = useLocation();
+		return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />;
 	}
 
 	return <>{children}</>;

@@ -4,13 +4,69 @@ import Post, { IPost } from "../models/Post";
 import Tags from "../models/Tags";
 import mongoose from 'mongoose';
 
-export const getPosts = async (req: AuthRequest, res: Response) => {
+export const getPosts = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1 });
-        res.json(posts);
-    } catch (error) {
-        console.error("Error fetching posts:", error);
-        res.status(500).json({ message: "Server error" });
+        // --- Ambil & validasi query params ---
+        const page = Math.max(1, parseInt(req.query.page as string) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 10)); // max 50 per page
+        const skip = (page - 1) * limit;
+
+        const search = (req.query.search as string) || '';
+        const tag = (req.query.tag as string) || '';
+
+        // --- Buat filter query ---
+        const filter: any = {};
+
+        if (search) {
+            filter.$or = [
+                { title: { $regex: search, $options: 'i' } },
+                { caption: { $regex: search, $options: 'i' } },
+            ];
+        }
+
+        if (tag) {
+            filter.tags = tag; // asumsi tags di Post disimpan sebagai string atau ObjectId
+            // kalau tags array string: filter.tags = tag;
+            // kalau array ObjectId: filter.tags = new mongoose.Types.ObjectId(tag);
+        }
+
+        // --- Query utama dengan populate & pagination ---
+        const posts = await Post.find(filter)
+            .populate('tags', 'tag_name')                        // kalau tags refer ke collection Tags
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(); // lebih cepat
+
+        // --- Hitung total untuk info pagination ---
+        const totalPosts = await Post.countDocuments(filter);
+        const totalPages = Math.ceil(totalPosts / limit);
+
+        // --- Response lengkap ---
+        res.json({
+            success: true,
+            data: posts,
+            pagination: {
+                currentPage: page,
+                totalPages,
+                totalItems: totalPosts,
+                itemsPerPage: limit,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1,
+            },
+            filters: {
+                search: search || null,
+                tag: tag || null,
+            },
+        });
+
+    } catch (error: any) {
+        console.error('Error fetching posts:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Gagal mengambil data posts',
+            error: error.message,
+        });
     }
 };
 

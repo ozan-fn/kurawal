@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/ca
 import { Badge } from "../../components/ui/badge";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 import { Loader2, Plus, Edit, Trash2 } from "lucide-react";
+import AdminLayout from "@/components/layouts/AdminLayout";
 
 interface Post {
 	_id: string;
@@ -47,11 +48,7 @@ export default function Posts() {
 	};
 
 	if (loading) {
-		return (
-			<div className="flex min-h-screen items-center justify-center">
-				<Loader2 className="h-8 w-8 animate-spin" />
-			</div>
-		);
+		return null;
 	}
 
 	if (error) {
@@ -65,52 +62,54 @@ export default function Posts() {
 	}
 
 	return (
-		<div className="container mx-auto p-6">
-			<div className="mb-6 flex items-center justify-between">
-				<h1 className="text-3xl font-bold">Posts</h1>
-				<Button asChild>
-					<Link to="/create-post">
-						<Plus className="mr-2 h-4 w-4" />
-						Create New Post
-					</Link>
-				</Button>
-			</div>
+		<AdminLayout>
+			<div className="">
+				<div className="mb-6 flex items-center justify-between">
+					<h1 className="text-3xl font-bold">Posts</h1>
+					<Button asChild>
+						<Link to="/create-post">
+							<Plus className="mr-2 h-4 w-4" />
+							Create New Post
+						</Link>
+					</Button>
+				</div>
 
-			{posts.length === 0 ? (
-				<div className="py-12 text-center">
-					<p className="text-muted-foreground">No posts found. Create your first post!</p>
-				</div>
-			) : (
-				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-					{posts.map((post) => (
-						<Card key={post._id} className="transition-shadow hover:shadow-lg">
-							<CardHeader>
-								<div className="flex items-start justify-between">
-									<CardTitle className="line-clamp-2 text-xl">{post.title}</CardTitle>
-									<Badge variant="secondary" className="ml-2 shrink-0">
-										{new Date(post.createdAt).toLocaleDateString()}
-									</Badge>
-								</div>
-							</CardHeader>
-							<CardContent>
-								<p className="text-muted-foreground mb-4 line-clamp-3">{post.content}</p>
-								<div className="flex gap-2">
-									<Button asChild variant="outline" size="sm">
-										<Link to={`/edit-post/${post._id}`}>
-											<Edit className="mr-2 h-4 w-4" />
-											Edit
-										</Link>
-									</Button>
-									<Button variant="destructive" size="sm" onClick={() => deletePost(post._id)}>
-										<Trash2 className="mr-2 h-4 w-4" />
-										Delete
-									</Button>
-								</div>
-							</CardContent>
-						</Card>
-					))}
-				</div>
-			)}
-		</div>
+				{posts.length === 0 ? (
+					<div className="py-12 text-center">
+						<p className="text-muted-foreground">No posts found. Create your first post!</p>
+					</div>
+				) : (
+					<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+						{posts.map((post) => (
+							<Card key={post._id} className="transition-shadow hover:shadow-lg">
+								<CardHeader>
+									<div className="flex items-start justify-between">
+										<CardTitle className="line-clamp-2 text-xl">{post.title}</CardTitle>
+										<Badge variant="secondary" className="ml-2 shrink-0">
+											{new Date(post.createdAt).toLocaleDateString()}
+										</Badge>
+									</div>
+								</CardHeader>
+								<CardContent>
+									<p className="text-muted-foreground mb-4 line-clamp-3">{post.content}</p>
+									<div className="flex gap-2">
+										<Button asChild variant="outline" size="sm">
+											<Link to={`/edit-post/${post._id}`}>
+												<Edit className="mr-2 h-4 w-4" />
+												Edit
+											</Link>
+										</Button>
+										<Button variant="destructive" size="sm" onClick={() => deletePost(post._id)}>
+											<Trash2 className="mr-2 h-4 w-4" />
+											Delete
+										</Button>
+									</div>
+								</CardContent>
+							</Card>
+						))}
+					</div>
+				)}
+			</div>
+		</AdminLayout>
 	);
 }
