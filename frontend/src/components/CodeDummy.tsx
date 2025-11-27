@@ -12,16 +12,19 @@ export const CodeDummy = ({ duration, delay, writing, cursor }: CodeDummyProps) 
 	return (
 		<Code
 			key={`${duration}-${delay}-${writing}-${cursor}`}
-			className="p- h-[340px] w-full"
+			className="h-[340px] w-full overflow-x-auto p-2 whitespace-nowrap"
 			code={`'use client';
  
 import * as React from "react";
 
-export interface MyComponentProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface MyComponentProps extends 
+React.HTMLAttributes<HTMLDivElement> {
   myProps: string;
 }
 
-export function MyComponent({ myProps, children, ...rest }: MyComponentProps) {
+export function MyComponent
+({ myProps, children, ...rest }: 
+ MyComponentProps) {
   return (
     <div {...rest}>
       <p>{myProps}</p>
