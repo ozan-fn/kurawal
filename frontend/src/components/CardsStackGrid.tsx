@@ -10,7 +10,7 @@ export function CardStackGrid() {
 
 // Small utility to highlight the content of specific section of a testimonial content
 export const Highlight = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-	return <span className={cn("bg-emerald-100 px-1 py-0.5 font-bold text-emerald-700 dark:bg-emerald-700/20 dark:text-emerald-500", className)}>{children}</span>;
+	return <span className={cn("rounded-md bg-[#0F828C]/10 px-1.5 py-0.5 font-bold text-[#0F828C]", "dark:bg-[#0F828C]/20 dark:text-[#94C8CD]", className)}>{children}</span>;
 };
 
 const CARDS = [
@@ -29,19 +29,6 @@ const CARDS = [
 
 	{
 		id: 1,
-		name: "TypeScript",
-		username: "typescript",
-		designation: "JavaScript with syntax for types",
-		avatar: "https://avatars.githubusercontent.com/u/6154722?s=200&v=4",
-		content: (
-			<p>
-				Catching bugs at compile time saved us <Highlight>40% debugging time</Highlight>. Our 15-person team now moves faster and with zero runtime type errors.
-			</p>
-		),
-	},
-
-	{
-		id: 2,
 		name: "Tailwind CSS",
 		username: "tailwindcss",
 		designation: "Rapidly build modern UIs",
@@ -55,20 +42,20 @@ const CARDS = [
 	},
 
 	{
-		id: 3,
-		name: "Supabase",
-		username: "supabase",
-		designation: "Open-source Firebase alternative",
-		avatar: "https://avatars.githubusercontent.com/u/54469796?s=200&v=4",
+		id: 2,
+		name: "MongoDB",
+		username: "mongodb",
+		designation: "Flexible NoSQL Database",
+		avatar: "https://avatars.githubusercontent.com/u/45120?s=200&v=4",
 		content: (
 			<p>
-				Postgres + Auth + Storage + Edge Functions in one dashboard. We replaced Firebase entirely and cut our backend costs by <Highlight>68%</Highlight>.
+				Schema-less design + horizontal scaling let us ship features <Highlight>3× faster</Highlight> than with SQL. Atlas Serverless reduced our ops overhead to basically zero.
 			</p>
 		),
 	},
 
 	{
-		id: 4,
+		id: 3,
 		name: "Vercel",
 		username: "vercel",
 		designation: "Frontend Cloud",
@@ -81,21 +68,7 @@ const CARDS = [
 	},
 
 	{
-		id: 5,
-		name: "Drizzle ORM",
-		username: "drizzleorm",
-		designation: "TypeScript-first ORM",
-		avatar: "https://avatars.githubusercontent.com/u/114422069?s=200&v=4",
-		content: (
-			<p>
-				Full type safety from database to frontend.
-				<Highlight>No more Zod + manual validation layers</Highlight> — Drizzle Studio is a game changer.
-			</p>
-		),
-	},
-
-	{
-		id: 6,
+		id: 4,
 		name: "shadcn/ui",
 		username: "shadcn",
 		designation: "Beautifully designed components",
