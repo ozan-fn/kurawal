@@ -2,7 +2,7 @@ import { Response } from "express";
 import { AuthRequest } from "../middlewares/authMiddleware";
 import Post, { IPost } from "../models/Post";
 import Tags from "../models/Tags";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export const getPosts = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
@@ -11,17 +11,14 @@ export const getPosts = async (req: AuthRequest, res: Response): Promise<void> =
         const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 10)); // max 50 per page
         const skip = (page - 1) * limit;
 
-        const search = (req.query.search as string) || '';
-        const tag = (req.query.tag as string) || '';
+        const search = (req.query.search as string) || "";
+        const tag = (req.query.tag as string) || "";
 
         // --- Buat filter query ---
         const filter: any = {};
 
         if (search) {
-            filter.$or = [
-                { title: { $regex: search, $options: 'i' } },
-                { caption: { $regex: search, $options: 'i' } },
-            ];
+            filter.$or = [{ title: { $regex: search, $options: "i" } }, { caption: { $regex: search, $options: "i" } }];
         }
 
         if (tag) {
@@ -32,7 +29,7 @@ export const getPosts = async (req: AuthRequest, res: Response): Promise<void> =
 
         // --- Query utama dengan populate & pagination ---
         const posts = await Post.find(filter)
-            .populate('tags', 'tag_name')                        // kalau tags refer ke collection Tags
+            .populate("tags", "tag_name") // kalau tags refer ke collection Tags
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
@@ -59,12 +56,11 @@ export const getPosts = async (req: AuthRequest, res: Response): Promise<void> =
                 tag: tag || null,
             },
         });
-
     } catch (error: any) {
-        console.error('Error fetching posts:', error);
+        console.error("Error fetching posts:", error);
         res.status(500).json({
             success: false,
-            message: 'Gagal mengambil data posts',
+            message: "Gagal mengambil data posts",
             error: error.message,
         });
     }
@@ -96,11 +92,15 @@ export const createPost = async (req: AuthRequest, res: Response) => {
         // Proses tags: Buat atau find existing, kumpulin ObjectId-nya langsung (nggak string)
         const tagIds: mongoose.Types.ObjectId[] = []; // Array ObjectId, biar type-safe
         for (const tagName of inputTags) {
-            if (typeof tagName !== 'string' || tagName.trim() === '') {
+            if (typeof tagName !== "string" || tagName.trim() === "") {
                 return res.status(400).json({ message: `Invalid tag: ${tagName}. Must be non-empty string.` });
             }
 
-            const tagSlug = tagName.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); // Clean slug
+            const tagSlug = tagName
+                .toLowerCase()
+                .trim()
+                .replace(/\s+/g, "-")
+                .replace(/[^a-z0-9-]/g, ""); // Clean slug
 
             // Cek apakah tag udah ada (unique by slug)
             let existingTag = await Tags.findOne({ tag_slug: tagSlug });
@@ -108,7 +108,7 @@ export const createPost = async (req: AuthRequest, res: Response) => {
                 // Buat baru kalau belum ada
                 const newTag = new Tags({
                     tag_name: tagName.trim(),
-                    tag_slug: tagSlug
+                    tag_slug: tagSlug,
                 });
                 existingTag = await newTag.save();
             }
@@ -128,12 +128,11 @@ export const createPost = async (req: AuthRequest, res: Response) => {
             link_github,
             tech_stack,
             authorId: req.user!.id,
-            tags: tagIds // Langsung array ObjectId, nggak perlu map lagi
+            tags: tagIds, // Langsung array ObjectId, nggak perlu map lagi
         });
 
         const savedPost = await post.save();
         res.status(201).json(savedPost);
-
     } catch (error) {
         console.error("Error creating post:", error);
         res.status(500).json({ message: "Server error" });
@@ -165,7 +164,8 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
         if (content) post.content = content;
 
         // Handle tags update (kalau ada di body)
-        if (inputTags !== undefined) { // Allow explicit null/empty untuk reset tags
+        if (inputTags !== undefined) {
+            // Allow explicit null/empty untuk reset tags
             if (!Array.isArray(inputTags)) {
                 return res.status(400).json({ message: "Tags must be an array of strings" });
             }
@@ -177,18 +177,22 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
                 // Proses tags baru: Cek existing atau create, kumpul ObjectId
                 const tagIds: mongoose.Types.ObjectId[] = [];
                 for (const tagName of inputTags) {
-                    if (typeof tagName !== 'string' || tagName.trim() === '') {
+                    if (typeof tagName !== "string" || tagName.trim() === "") {
                         return res.status(400).json({ message: `Invalid tag: ${tagName}. Must be non-empty string.` });
                     }
 
-                    const tagSlug = tagName.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    const tagSlug = tagName
+                        .toLowerCase()
+                        .trim()
+                        .replace(/\s+/g, "-")
+                        .replace(/[^a-z0-9-]/g, "");
 
                     // Cek atau create tag
                     let existingTag = await Tags.findOne({ tag_slug: tagSlug });
                     if (!existingTag) {
                         const newTag = new Tags({
                             tag_name: tagName.trim(),
-                            tag_slug: tagSlug
+                            tag_slug: tagSlug,
                         });
                         existingTag = await newTag.save();
                     }
@@ -206,7 +210,6 @@ export const updatePost = async (req: AuthRequest, res: Response) => {
         // Save dan return
         const updatedPost = await post.save();
         res.json(updatedPost);
-
     } catch (error) {
         console.error("Error updating post:", error);
         res.status(500).json({ message: "Server error" });
