@@ -1,35 +1,31 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { IUser } from "../models/User";
+import express from "express";
+import { fromNodeHeaders } from "better-auth/node";
+import { auth } from "../lib/auth";
 
-const JWT_SECRET = process.env.JWT_SECRET || "BRT0vrxN5ekjDWKgu3fD";
-
-if (!JWT_SECRET) {
-    console.log("JWT is Undefined");
-}
-
-export interface JWTPayload {
-    id: string;
-    nama: string;
-    email: string;
-}
-
-export interface AuthRequest extends Request {
-    user?: JWTPayload;
-}
-
-export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction) => {
-    const token = req.cookies.token;
-
-    if (!token) {
-        return res.status(401).json({ message: "Access token required" });
-    }
-
-    jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
-        if (err) {
-            return res.status(403).json({ message: "Invalid token" });
+declare global {
+    namespace Express {
+        interface Request {
+            user?: any;
+            session?: any;
         }
-        req.user = user;
+    }
+}
+
+// Middleware untuk cek authentication
+export const requireAuth = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        const session = await auth.api.getSession({
+            headers: fromNodeHeaders(req.headers),
+        });
+
+        if (!session) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        req.user = session.user;
+        req.session = session;
         next();
-    });
+    } catch (error) {
+        return res.status(401).json({ error: "Invalid session" });
+    }
 };

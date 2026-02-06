@@ -7,9 +7,9 @@ export default [
 	{
 		path: "/posts",
 		element: (
-			<Layout>
-				<Posts />
-			</Layout>
+			// <Layout>
+			<Posts />
+			// </Layout>
 		),
 	},
 	{

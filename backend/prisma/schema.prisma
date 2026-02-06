@@ -1,72 +1,135 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+    provider = "prisma-client-js"
+    output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
 }
 
 type EnvsEnv {
-  env_description String
-  key             String
-  optional        Boolean
-  sensitive       Boolean
-  value           String
+    env_description String
+    key             String
+    optional        Boolean
+    sensitive       Boolean
+    value           String
 }
 
 model envs {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  v           Int       @map("__v")
-  createdAt   DateTime  @db.Date
-  description String
-  env         EnvsEnv[]
-  link_github String
-  title       String    @unique(map: "title_1")
-  updatedAt   DateTime  @db.Date
+    id          String    @id @default(auto()) @map("_id") @db.ObjectId
+    v           Int       @map("__v")
+    createdAt   DateTime  @db.Date
+    description String
+    env         EnvsEnv[]
+    link_github String
+    title       String    @unique(map: "title_1")
+    updatedAt   DateTime  @db.Date
 
-  @@index([env.key], map: "env.key_1")
+    @@index([env.key], map: "env.key_1")
 }
 
 model media {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
-  createdAt DateTime @db.Date
-  filename  String
-  publicId  String   @unique(map: "publicId_1")
-  status    String
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    v         Int      @map("__v")
+    createdAt DateTime @db.Date
+    filename  String
+    publicId  String   @unique(map: "publicId_1")
+    status    String
 }
 
 model posts {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  v           Int      @map("__v")
-  authorId    String   @db.ObjectId
-  content     String
-  createdAt   DateTime @db.Date
-  description String
-  link_github String
-  status      String?
-  tags        String[]
-  tech_stack  String[]
-  title       String
-  type_post   String
-  updatedAt   DateTime @db.Date
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    v           Int      @map("__v")
+    authorId    String   @db.ObjectId
+    content     String
+    createdAt   DateTime @db.Date
+    description String
+    link_github String
+    status      String?
+    tags        String[]
+    tech_stack  String[]
+    title       String
+    type_post   String
+    updatedAt   DateTime @db.Date
 }
 
 model tags {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
-  createdAt DateTime @db.Date
-  tag_name  String
-  tag_slug  String
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    v         Int      @map("__v")
+    createdAt DateTime @db.Date
+    tag_name  String
+    tag_slug  String
 }
 
-model users {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
-  createdAt DateTime @db.Date
-  email     String   @unique(map: "email_1")
-  nama      String
-  password  String
+// model users {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   v         Int      @map("__v")
+//   createdAt DateTime @db.Date
+//   email     String   @unique(map: "email_1")
+//   nama      String
+//   password  String
+// }
+
+model User {
+    id            String    @id @map("_id")
+    name          String
+    email         String
+    emailVerified Boolean   @default(false)
+    image         String?
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    sessions      Session[]
+    accounts      Account[]
+
+    @@unique([email])
+    @@map("user")
+}
+
+model Session {
+    id        String   @id @map("_id")
+    expiresAt DateTime
+    token     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    ipAddress String?
+    userAgent String?
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([token])
+    @@index([userId])
+    @@map("session")
+}
+
+model Account {
+    id                    String    @id @map("_id")
+    accountId             String
+    providerId            String
+    userId                String
+    user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    accessToken           String?
+    refreshToken          String?
+    idToken               String?
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String?
+    password              String?
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
+
+    @@index([userId])
+    @@map("account")
+}
+
+model Verification {
+    id         String   @id @map("_id")
+    identifier String
+    value      String
+    expiresAt  DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@index([identifier])
+    @@map("verification")
 }
