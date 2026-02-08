@@ -1,21 +1,22 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { createAuthClient } from "better-auth/client";
 
-// Set axios to send credentials (cookies)
-axios.defaults.withCredentials = true;
+// Setup Better Auth client
+const authClient = createAuthClient({
+	// baseURL: "http://localhost:3000", // Sesuaikan dengan URL server Anda
+});
 
 interface User {
 	id: string;
-	nama: string;
+	name: string;
 	email: string;
 }
 
 interface AuthContextType {
 	user: User | null;
 	login: (email: string, password: string) => Promise<void>;
-	register: (nama: string, email: string, password: string) => Promise<void>;
+	register: (name: string, email: string, password: string) => Promise<void>;
 	logout: () => void;
 	loading: boolean;
 }
@@ -37,7 +38,6 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		checkAuth();
@@ -45,54 +45,58 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 	const checkAuth = async () => {
 		try {
-			const response = await axios.get("/api/auth/me");
-			setUser(response.data);
-		} catch (error: any) {
-			if (error.message === "SESSION_EXPIRED") {
-				navigate("/login");
+			const { data } = await authClient.getSession();
+			if (data) {
+				setUser({
+					id: data.user.id,
+					name: data.user.name,
+					email: data.user.email,
+				});
+			} else {
+				setUser(null);
 			}
+		} catch (error) {
 			setUser(null);
 		}
 		setLoading(false);
 	};
 
 	const login = async (email: string, password: string) => {
-		try {
-			await axios.post("/api/auth/login", { email, password });
-			await checkAuth();
-		} catch (error: any) {
-			if (error.message === "SESSION_EXPIRED") {
-				navigate("/login");
-			}
-			throw error;
+		const { error } = await authClient.signIn.email({
+			email,
+			password,
+		});
+
+		if (error) {
+			throw new Error(error.message);
 		}
+
+		await checkAuth();
 	};
 
-	const register = async (nama: string, email: string, password: string) => {
-		try {
-			await axios.post("/api/auth/register", { nama, email, password });
-			// After register, auto login
-			await login(email, password);
-		} catch (error: any) {
-			if (error.message === "SESSION_EXPIRED") {
-				navigate("/login");
-			}
-			throw error;
+	const register = async (name: string, email: string, password: string) => {
+		const { error } = await authClient.signUp.email({
+			name,
+			email,
+			password,
+		});
+
+		if (error) {
+			throw new Error(error.message);
 		}
+
+		// After register, auto login
+		await login(email, password);
 	};
 
 	const logout = async () => {
-		try {
-			await axios.post("/api/auth/logout");
-			setUser(null);
-		} catch (error: any) {
-			if (error.message === "SESSION_EXPIRED") {
-				navigate("/login");
-			}
-			// Even if logout fails, clear user
-			setUser(null);
-		}
+		await authClient.signOut();
+		setUser(null);
 	};
 
-	return <AuthContext.Provider value={{ user, login, register, logout, loading }}>{children}</AuthContext.Provider>;
+	return (
+		<AuthContext.Provider value={{ user, login, register, logout, loading }}>
+			<>{children}</>
+		</AuthContext.Provider>
+	);
 };

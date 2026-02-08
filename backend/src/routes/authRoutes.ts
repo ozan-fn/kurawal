@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { register, login, refreshToken, logout, me } from "../controllers/authController";
-import { authenticateToken } from "../middlewares/authMiddleware";
+import { auth } from "../lib/auth";
+import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
+import { requireAuth } from "../middlewares/authMiddleware";
 
 const router = Router();
 
-router.post("/register", register);
-router.post("/login", login);
-router.post("/refresh", refreshToken);
-router.post("/logout", logout);
-router.get("/me", authenticateToken, me);
+router.get("/me", requireAuth, async (req, res) => {
+    return res.json(req.session);
+});
+router.all("/*splat", toNodeHandler(auth));
 
 export default router;
