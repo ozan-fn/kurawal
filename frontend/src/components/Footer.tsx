@@ -1,5 +1,6 @@
-import { FacebookIcon, GithubIcon, InstagramIcon, LinkedinIcon, TwitterIcon, YoutubeIcon } from "lucide-react";
+import { FacebookIcon, GithubIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 import logoLight from "@/assets/svg/logo-light-mode.svg";
 import logoDark from "@/assets/svg/logo-dark-mode.svg";
@@ -92,10 +93,6 @@ export function Footer() {
 			icon: TwitterIcon,
 			link: "#",
 		},
-		{
-			icon: YoutubeIcon,
-			link: "#",
-		},
 	];
 	return (
 		<>
@@ -103,13 +100,13 @@ export function Footer() {
 			<footer className="relative mx-auto max-w-[1400px] border-dashed pt-12 min-[1400px]:border-x min-[1800px]:max-w-[1536px]">
 				<div className="grid grid-cols-6 gap-6 p-4">
 					<div className="col-span-6 flex flex-col gap-4 pt-5 md:col-span-4">
-						<a className="w-max" href="#">
+						<Link className="w-max" to="#">
 							<img src={isDarkMode ? logoDark : logoLight} alt="Logo" className="h-4 w-auto md:h-5" />
-						</a>
+						</Link>
 						<p className="text-muted-foreground max-w-sm font-mono text-sm text-balance">A comprehensive financial technology platform.</p>
 						<div className="flex gap-2">
 							{socialLinks.map((item, index) => (
-								<Button key={`social-${item.link}-${index}`} size="icon-sm" variant="outline">
+								<Button key={`social-${item.link}-${index}`} size="sm" variant="outline">
 									<a href={item.link} target="_blank">
 										<item.icon className="size-3.5" />
 									</a>
@@ -121,9 +118,9 @@ export function Footer() {
 						<span className="text-muted-foreground text-xs">Resources</span>
 						<div className="mt-2 flex flex-col gap-2">
 							{resources.map(({ href, title }) => (
-								<a className="w-max text-sm hover:underline" href={href} key={title}>
+								<Link className="w-max text-sm hover:underline" to={href} key={title}>
 									{title}
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>
@@ -131,9 +128,9 @@ export function Footer() {
 						<span className="text-muted-foreground text-xs">Company</span>
 						<div className="mt-2 flex flex-col gap-2">
 							{company.map(({ href, title }) => (
-								<a className="w-max text-sm hover:underline" href={href} key={title}>
+								<Link className="w-max text-sm hover:underline" to={href} key={title}>
 									{title}
-								</a>
+								</Link>
 							))}
 						</div>
 					</div>

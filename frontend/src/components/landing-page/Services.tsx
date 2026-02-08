@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Highlighter } from "../ui/highlighter";
 import IphoneMockup from "../IphoneMockup";
 import AndroidMockup from "../AndroidMockup";
+import { Link } from "react-router-dom";
 
 const ServicesSection = () => {
 	return (
@@ -25,10 +26,10 @@ const ServicesSection = () => {
 						</div>
 
 						<div className="flex justify-center lg:justify-start">
-							<Button asChild className="group my-5">
-								<a href="/contact-us">
+							<Button asChild className="group mt-7">
+								<Link to={"contact-us"}>
 									Contact Us <ArrowUpRight className="transition-transform duration-200 group-hover:translate-x-0.5" />
-								</a>
+								</Link>
 							</Button>
 						</div>
 					</div>
@@ -37,7 +38,7 @@ const ServicesSection = () => {
 					<div className="flex-1/6">
 						<div className="grid grid-cols-1 gap-0 border border-dashed md:grid-cols-5 lg:grid-cols-5">
 							{/* Mobile App */}
-							<div className="border-b border-dashed overflow-hidden p-4 md:col-span-2 lg:col-span-2 lg:border-r">
+							<div className="overflow-hidden border-b border-dashed p-4 md:col-span-2 lg:col-span-2 lg:border-r">
 								<h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-100">Mobile App Development</h2>
 								<p className="text-neutral-600 dark:text-neutral-400">High-performance mobile apps for iOS & Android.</p>
 								<div className="mt-4 flex justify-center gap-4 lg:justify-start">
@@ -47,7 +48,7 @@ const ServicesSection = () => {
 							</div>
 
 							{/* Website */}
-							<div className="border-b overflow-hidden border-dashed p-4 md:col-span-3 lg:col-span-3">
+							<div className="overflow-hidden border-b border-dashed p-4 md:col-span-3 lg:col-span-3">
 								<h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-100">Website Development</h2>
 								<p className="text-neutral-600 dark:text-neutral-400">Fast, scalable, and conversion-focused websites.</p>
 								<div className="mt-4 flex w-full justify-center lg:justify-start">
