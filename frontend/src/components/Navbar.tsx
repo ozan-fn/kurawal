@@ -2,6 +2,7 @@ import { Search, Github, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import ThemeToggler from "./ThemeToggler";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 import logoLight from "@/assets/svg/logo-light-mode.svg";
 import logoDark from "@/assets/svg/logo-dark-mode.svg";
@@ -10,7 +11,7 @@ const navbarItems = [
 	{ id: 1, title: "Work", href: "#" },
 	{ id: 2, title: "Blog", href: "#" },
 	{ id: 3, title: "Resources", href: "#" },
-	{ id: 4, title: "About", href: "#" },
+	{ id: 4, title: "About Us", href: "about-us" },
 ];
 
 export default function Navbar() {
@@ -39,16 +40,18 @@ export default function Navbar() {
 			<nav className="mx-auto flex h-full w-full max-w-[1400px] items-center justify-between border-dashed px-4 min-[1400px]:border-x">
 				{/* Left */}
 				<div className="flex flex-1 items-center text-lg font-semibold">
-					<img src={isDarkMode ? logoDark : logoLight} alt="Logo" className="h-4 w-auto md:h-5" />
+					<Link to="/">
+						<img src={isDarkMode ? logoDark : logoLight} alt="Logo" className="h-4 w-auto md:h-5" />
+					</Link>
 				</div>
 
 				{/* Center */}
 				<ul className="hidden items-center gap-6 text-sm text-neutral-800 lg:flex dark:text-neutral-100">
 					{navbarItems.map((item) => (
 						<li key={item.id}>
-							<a href={item.href} className="hover:text-neutral-600 dark:hover:text-neutral-300">
+							<Link to={item.href} className="hover:text-neutral-600 dark:hover:text-neutral-300">
 								{item.title}
-							</a>
+							</Link>
 						</li>
 					))}
 				</ul>
@@ -61,12 +64,12 @@ export default function Navbar() {
 
 					<ThemeToggler />
 
-					<a href="https://github.com/KurawalCreative" target="_blank" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+					<a href="https://github.com/kurawal-creative" target="_blank" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
 						<Github className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
 					</a>
 
 					<Button asChild>
-						<a href="contact-us">Contact Us</a>
+						<Link to="contact-us">Contact Us</Link>
 					</Button>
 				</div>
 
@@ -103,9 +106,9 @@ export default function Navbar() {
 						<ul className="mb-4 space-y-3 border-b border-dashed border-gray-300 pb-4 text-end">
 							{navbarItems.map((item) => (
 								<li key={item.id}>
-									<a href={item.href} className="block text-sm text-neutral-800 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300" onClick={() => setIsOpen(false)}>
+									<Link to={item.href} className="block text-sm text-neutral-800 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300" onClick={() => setIsOpen(false)}>
 										{item.title}
-									</a>
+									</Link>
 								</li>
 							))}
 						</ul>
@@ -137,9 +140,9 @@ export default function Navbar() {
 						<ul className="space-y-3">
 							{navbarItems.map((item) => (
 								<li key={item.id}>
-									<a href={item.href} className="block text-sm text-neutral-800 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300" onClick={() => setIsOpen(false)}>
+									<Link to={item.href} className="block text-sm text-neutral-800 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300" onClick={() => setIsOpen(false)}>
 										{item.title}
-									</a>
+									</Link>
 								</li>
 							))}
 						</ul>

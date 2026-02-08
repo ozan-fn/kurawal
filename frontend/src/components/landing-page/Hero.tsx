@@ -4,6 +4,7 @@ import { FlipWords } from "../ui/flip-words";
 import { Highlighter } from "../ui/highlighter";
 import { Marquee } from "../ui/marquee";
 import { TypingAnimation } from "../ui/typing-animation";
+import { Link } from "react-router-dom";
 
 import airin from "@/assets/images/airin.jpg";
 import aitherway from "@/assets/images/aitherway.jpg";
@@ -92,7 +93,7 @@ const HeroSection = () => {
 				</div>
 
 				<div className="z-10 w-full max-w-5xl">
-					<div className="hidden justify-center flex-wrap gap-5 lg:flex">
+					<div className="hidden flex-wrap justify-center gap-5 lg:flex">
 						{framework.map((v, i) => (
 							<img key={i} src={v} alt="tech stack" className="h-7 grayscale dark:grayscale-0" />
 						))}
@@ -102,7 +103,7 @@ const HeroSection = () => {
 						))}
 					</div>
 					<div className="flex lg:hidden">
-						<Marquee pauseOnHover className="grayscale dark:grayscale-0 [--duration:12s]">
+						<Marquee pauseOnHover className="grayscale [--duration:12s] dark:grayscale-0">
 							{frameworkTech.map((v, i) => (
 								<a key={i} href={v} className="flex items-center justify-center">
 									<img src={v} alt="project" className="h-7 w-auto rounded-sm transition hover:opacity-100" />
@@ -114,10 +115,10 @@ const HeroSection = () => {
 					</div>
 					<div className="mx-auto mt-6 flex justify-center gap-4 md:mt-8">
 						<Button asChild>
-							<a href="/">Our Services</a>
+							<Link to="/">Our Services</Link>
 						</Button>
 						<Button variant="outline" asChild>
-							<a href="/contact-us">Contact Us</a>
+							<Link to="/contact-us">Contact Us</Link>
 						</Button>
 					</div>
 				</div>
