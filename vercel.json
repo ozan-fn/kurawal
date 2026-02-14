@@ -1,9 +1,8 @@
 {
     "version": 2,
-    "buildCommand": "cd backend && npm run build",
     "builds": [
         {
-            "src": "backend/dist/server.js",
+            "src": "backend/dist/src/server.js",
             "use": "@vercel/node"
         },
         {
@@ -14,7 +13,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "backend/dist/server.js"
+            "dest": "backend/dist/src/server.js"
         }
     ]
 }
