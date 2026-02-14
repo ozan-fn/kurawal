@@ -1,16 +1,26 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { BookOpen, Calendar, HomeIcon, Image, Settings } from "lucide-react";
+import { BookOpen, Calendar, HomeIcon, Image, Settings, Tags } from "lucide-react";
 import kurawalSidebar from "@/assets/kurawal-sidebar.svg";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 const items = [
 	{
+		title: "Dashboard",
+		url: "/admin",
+		icon: HomeIcon,
+	},
+	{
 		title: "Posts",
-		url: "/posts",
+		url: "/admin/posts",
 		icon: BookOpen,
 	},
 	{
+		title: "Tags",
+		url: "/admin/tags",
+		icon: Tags,
+	},
+	{
 		title: "Media",
-		url: "/media",
+		url: "/admin/media",
 		icon: Image,
 	},
 ];
@@ -34,10 +44,10 @@ export function AppSidebar() {
 							{items.map((item) => (
 								<SidebarMenuItem key={item.title}>
 									<SidebarMenuButton isActive={pathname === item.url} size={"md"} className="" asChild>
-										<a href={item.url}>
+										<Link to={item.url}>
 											<item.icon />
 											<span>{item.title}</span>
-										</a>
+										</Link>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							))}

@@ -64,9 +64,9 @@ export default function Navbar() {
 
 					<ThemeToggler />
 
-					<a href="https://github.com/kurawal-creative" target="_blank" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+					<Link to="https://github.com/kurawal-creative" target="_blank" rel="noopener noreferrer" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
 						<Github className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
-					</a>
+					</Link>
 
 					<Button asChild>
 						<Link to="contact-us">Contact Us</Link>
@@ -85,9 +85,9 @@ export default function Navbar() {
 
 					<ThemeToggler />
 
-					<a href="https://github.com/KurawalCreative" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+					<Link to="https://github.com/KurawalCreative" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
 						<Github className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
-					</a>
+					</Link>
 
 					<Button>Get Access</Button>
 				</div>
@@ -122,9 +122,9 @@ export default function Navbar() {
 
 								<ThemeToggler />
 
-								<a href="https://github.com/KurawalCreative" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
+								<Link to="https://github.com/KurawalCreative" className="rounded-md p-2 transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
 									<Github className="h-4 w-4 text-neutral-800 dark:text-neutral-100" />
-								</a>
+								</Link>
 							</div>
 
 							<Button>Get Access</Button>

@@ -11,7 +11,7 @@ interface DashboardStats {
 	draftPosts: number;
 }
 
-export default function Admin() {
+export default function AdminDashboard() {
 	const [stats, setStats] = useState<DashboardStats>({
 		totalPosts: 0,
 		totalTags: 0,
@@ -27,7 +27,6 @@ export default function Admin() {
 				const [postsData, tagsData] = await Promise.all([postsApi.getAll(1, 100), tagsApi.getAll(1, 100)]);
 
 				const posts = postsData.data || [];
-				const tags = tagsData.data || [];
 
 				const publishedCount = posts.filter((p: any) => p.status === "PUBLISHED").length;
 				const draftCount = posts.filter((p: any) => p.status === "DRAFT").length;
