@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import { auth } from "./lib/auth";
 import swaggerJSDoc from "swagger-jsdoc";
+import { apiReference } from "@scalar/express-api-reference";
 
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -39,21 +40,12 @@ const swaggerSpec = swaggerJSDoc({
     apis: ["./src/routes/*.ts"], // scan komentar di folder ini
 });
 
-let scalarApiHandler: ReturnType<typeof import("@scalar/express-api-reference").apiReference> | null = null;
-
-app.use("/api", async (req, res, next) => {
-    try {
-        if (!scalarApiHandler) {
-            const { apiReference } = await import("@scalar/express-api-reference");
-            scalarApiHandler = apiReference({
-                content: swaggerSpec,
-            });
-        }
-        return scalarApiHandler(req, res);
-    } catch (error) {
-        return next(error);
-    }
-});
+app.use(
+    "/api",
+    apiReference({
+        content: swaggerSpec,
+    }),
+);
 
 // const staticDir = path.resolve(__dirname, "../..", "frontend", "dist");
 
