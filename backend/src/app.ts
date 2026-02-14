@@ -3,6 +3,8 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import { toNodeHandler, fromNodeHeaders } from "better-auth/node";
 import { auth } from "./lib/auth";
+import swaggerJSDoc from "swagger-jsdoc";
+import { apiReference } from "@scalar/express-api-reference";
 
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -23,7 +25,27 @@ app.use("/api/envs", envRoutes);
 app.use("/api/media", mediaRoutes);
 app.use("/api/tags", tagRoutes);
 
-app.get("/api", (req, res) => res.json({ hello: "world" }));
+app.use("/api/auth/sign-up/email", (req, res) => {
+    res.status(403).json({ error: "Registration is disabled" });
+});
+
+const swaggerSpec = swaggerJSDoc({
+    definition: {
+        openapi: "3.1.0",
+        info: {
+            title: "Express Auto Docs API",
+            version: "1.0.0",
+        },
+    },
+    apis: ["./src/routes/*.ts"], // scan komentar di folder ini
+});
+
+app.use(
+    "/api",
+    apiReference({
+        content: swaggerSpec,
+    }),
+);
 
 // const staticDir = path.resolve(__dirname, "../..", "frontend", "dist");
 

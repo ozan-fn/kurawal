@@ -11,6 +11,11 @@ declare global {
     }
 }
 
+export interface AuthRequest extends express.Request {
+    user?: any;
+    session?: any;
+}
+
 // Middleware untuk cek authentication
 export const requireAuth = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {

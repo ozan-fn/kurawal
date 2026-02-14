@@ -8,68 +8,66 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-type EnvsEnv {
-    env_description String
-    key             String
-    optional        Boolean
-    sensitive       Boolean
-    value           String
+enum MediaStatus {
+    ACTIVE
+    PENDING
 }
 
-model envs {
-    id          String    @id @default(auto()) @map("_id") @db.ObjectId
-    v           Int       @map("__v")
-    createdAt   DateTime  @db.Date
-    description String
-    env         EnvsEnv[]
-    link_github String
-    title       String    @unique(map: "title_1")
-    updatedAt   DateTime  @db.Date
-
-    @@index([env.key], map: "env.key_1")
-}
-
-model media {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    v         Int      @map("__v")
-    createdAt DateTime @db.Date
+model Media {
+    id        String      @id @default(auto()) @map("_id") @db.ObjectId
     filename  String
-    publicId  String   @unique(map: "publicId_1")
-    status    String
+    publicId  String      @unique
+    status    MediaStatus @default(PENDING)
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+
+    // 🔗 Relasi ke Post (optional)
+    post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId String? @db.ObjectId
 }
 
-model posts {
-    id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    v           Int      @map("__v")
-    authorId    String   @db.ObjectId
+enum PostStatus {
+    DRAFT
+    PUBLISHED
+    ARCHIVED
+}
+
+enum PostType {
+    POST
+    PROJECT
+}
+
+model Post {
+    id          String     @id @default(auto()) @map("_id") @db.ObjectId
+    user        User       @relation(fields: [userId], references: [id])
+    userId      String
     content     String
-    createdAt   DateTime @db.Date
-    description String
-    link_github String
-    status      String?
-    tags        String[]
-    tech_stack  String[]
+    thumbnail   String?
+    description String?
+    link_github String?
+    status      PostStatus @default(DRAFT)
     title       String
-    type_post   String
-    updatedAt   DateTime @db.Date
+    type_post   PostType   @default(POST)
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+
+    medias Media[]
+    tag    Tag     @relation(fields: [tagId], references: [id])
+    tagId  String  @db.ObjectId
 }
 
-model tags {
+model Tag {
     id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    v         Int      @map("__v")
-    createdAt DateTime @db.Date
-    tag_name  String
-    tag_slug  String
+    name      String
+    slug      String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // 🔗 Reverse relation
+    posts Post[]
 }
 
 // model users {
-//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-//   v         Int      @map("__v")
-//   createdAt DateTime @db.Date
-//   email     String   @unique(map: "email_1")
-//   nama      String
-//   password  String
-// }
 
 model User {
     id            String    @id @map("_id")
@@ -81,6 +79,8 @@ model User {
     updatedAt     DateTime  @updatedAt
     sessions      Session[]
     accounts      Account[]
+
+    Posts Post[]
 
     @@unique([email])
     @@map("user")
