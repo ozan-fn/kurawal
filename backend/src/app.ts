@@ -33,7 +33,7 @@ const swaggerSpec = swaggerJSDoc({
     apis: ["./src/routes/*.ts"],
 });
 
-app.get("/api/docs", async (req: Request, res: Response) => {
+app.get("/api", async (req: Request, res: Response) => {
     try {
         const { apiReference } = await import("@scalar/express-api-reference");
         apiReference({ content: swaggerSpec })(req, res);
