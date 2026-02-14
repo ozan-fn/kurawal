@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
-        "target": "es2016",
+        "target": "ES2020", // lebih modern agar dukung import/export
+        "module": "ESNext", // gunakan ESM, bukan commonjs
+        "moduleResolution": "node", // pastikan resolusi modul sesuai Node
         "jsx": "preserve",
-        "module": "commonjs",
         "allowJs": true,
         "outDir": "./dist",
         "esModuleInterop": true,
