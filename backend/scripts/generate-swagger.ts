@@ -12,7 +12,7 @@ const swaggerSpec = swaggerJSDoc({
         },
         servers: [
             {
-                url: "/api",
+                url: "/",
                 description: "API Server",
             },
         ],

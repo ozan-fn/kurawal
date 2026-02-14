@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "/api",
+            "url": "/",
             "description": "API Server"
         }
     ],
