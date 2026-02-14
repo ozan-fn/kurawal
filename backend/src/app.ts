@@ -1,7 +1,6 @@
-import express, { type Express } from "express";
+import express, { type Express, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import swaggerJSDoc from "swagger-jsdoc";
-import { apiReference } from "@scalar/express-api-reference";
 
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -34,12 +33,14 @@ const swaggerSpec = swaggerJSDoc({
     apis: ["./src/routes/*.ts"],
 });
 
-app.use(
-    "/api",
-    apiReference({
-        content: swaggerSpec,
-    }),
-);
+app.get("/api/docs", async (req: Request, res: Response) => {
+    try {
+        const { apiReference } = await import("@scalar/express-api-reference");
+        apiReference({ content: swaggerSpec })(req, res);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to load API documentation" });
+    }
+});
 
 const staticDir = path.resolve(__dirname, "../..", "frontend", "dist");
 
