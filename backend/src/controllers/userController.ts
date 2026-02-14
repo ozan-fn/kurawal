@@ -10,7 +10,6 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
                 id: true,
                 name: true,
                 email: true,
-                emailVerified: true,
                 image: true,
                 createdAt: true,
                 updatedAt: true,
