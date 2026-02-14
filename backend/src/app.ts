@@ -28,7 +28,7 @@ app.get("/api/swagger.json", async (req: Request, res: Response) => {
 app.get("/api", async (req: Request, res: Response) => {
     try {
         const { apiReference } = await import("@scalar/express-api-reference");
-        apiReference({ content: "/api/swagger.json" })(req, res);
+        apiReference({ content: swaggerDoc })(req, res);
     } catch (error) {
         res.status(500).json({ error: "Failed to load API documentation" });
     }
