@@ -6,4 +6,4 @@ bun.lock
 node_modules
 .env
 dist
-# /src/generated/prisma
+/src/generated/prisma
