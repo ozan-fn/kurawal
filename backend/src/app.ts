@@ -25,8 +25,8 @@ app.use("/api/tags", tagRoutes);
 app.get("/api", async (req: Request, res: Response) => {
     try {
         const { apiReference } = await import("@scalar/express-api-reference");
-        let p = JSON.parse(fs.readFileSync(path.join(__dirname, "../scripts/swagger.json"), "utf-8"));
-        apiReference({ content: p, theme: "purple" })(req, res);
+        let p = path.join(__dirname, "../scripts/swagger.json");
+        apiReference({ spec: p, theme: "moon" })(req, res);
     } catch (error) {
         res.status(500).json({ error: "Failed to load API documentation" });
     }
