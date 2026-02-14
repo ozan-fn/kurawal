@@ -7,8 +7,6 @@ import postRoutes from "./routes/postRoutes";
 import envRoutes from "./routes/envRoutes";
 import mediaRoutes from "./routes/mediaRoutes";
 import tagRoutes from "./routes/tagRoutes";
-import path from "path";
-import fs from "fs";
 
 const app: Express = express();
 
@@ -25,8 +23,7 @@ app.use("/api/tags", tagRoutes);
 app.get("/api", async (req: Request, res: Response) => {
     try {
         const { apiReference } = await import("@scalar/express-api-reference");
-        let p = path.join(__dirname, "../scripts/swagger.json");
-        apiReference({ spec: p, theme: "moon" })(req, res);
+        apiReference({ url: "/swagger.json", theme: "moon" })(req, res);
     } catch (error) {
         res.status(500).json({ error: "Failed to load API documentation" });
     }
