@@ -23,11 +23,12 @@ export default function Login() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		setError("");
 		try {
 			await login(email, password);
 			navigate(redirectTo);
 		} catch (err: any) {
-			setError(err.response?.data?.message || "Login failed");
+			setError(err.message || "Login failed");
 		}
 	};
 	return (

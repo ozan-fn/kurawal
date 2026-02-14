@@ -1,11 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import { createAuthClient } from "better-auth/client";
-
-// Setup Better Auth client
-const authClient = createAuthClient({
-	// baseURL: "http://localhost:3000", // Sesuaikan dengan URL server Anda
-});
+import api from "../utils/api";
 
 interface User {
 	id: string;
@@ -16,8 +11,7 @@ interface User {
 interface AuthContextType {
 	user: User | null;
 	login: (email: string, password: string) => Promise<void>;
-	register: (name: string, email: string, password: string) => Promise<void>;
-	logout: () => void;
+	logout: () => Promise<void>;
 	loading: boolean;
 }
 
@@ -45,16 +39,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 	const checkAuth = async () => {
 		try {
-			const { data } = await authClient.getSession();
-			if (data) {
-				setUser({
-					id: data.user.id,
-					name: data.user.name,
-					email: data.user.email,
-				});
-			} else {
-				setUser(null);
-			}
+			const { data } = await api.get("/auth/me");
+			setUser(data.user);
 		} catch (error) {
 			setUser(null);
 		}
@@ -62,40 +48,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	};
 
 	const login = async (email: string, password: string) => {
-		const { error } = await authClient.signIn.email({
-			email,
-			password,
-		});
-
-		if (error) {
-			throw new Error(error.message);
+		try {
+			const { data } = await api.post("/auth/login", { email, password });
+			setUser(data.user);
+		} catch (error: any) {
+			throw new Error(error.response?.data?.message || "Login failed");
 		}
-
-		await checkAuth();
-	};
-
-	const register = async (name: string, email: string, password: string) => {
-		const { error } = await authClient.signUp.email({
-			name,
-			email,
-			password,
-		});
-
-		if (error) {
-			throw new Error(error.message);
-		}
-
-		// After register, auto login
-		await login(email, password);
 	};
 
 	const logout = async () => {
-		await authClient.signOut();
-		setUser(null);
+		try {
+			await api.post("/auth/logout");
+			setUser(null);
+		} catch (error: any) {
+			throw new Error(error.response?.data?.message || "Logout failed");
+		}
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, login, register, logout, loading }}>
+		<AuthContext.Provider value={{ user, login, logout, loading }}>
 			<>{children}</>
 		</AuthContext.Provider>
 	);

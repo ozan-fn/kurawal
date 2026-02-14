@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getPosts, getPost, createPost, updatePost, deletePost } from "../controllers/postController";
-import { requireAuth } from "../middlewares/authMiddleware";
+import { authenticate } from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -103,6 +103,9 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
+
+router.get("/", authenticate, getPosts);
+router.post("/", authenticate, createPost);
 
 /**
  * @swagger
@@ -210,10 +213,8 @@ const router = Router();
  *         description: Unauthorized
  */
 
-router.get("/", requireAuth, getPosts);
-router.get("/:id", requireAuth, getPost);
-router.post("/", requireAuth, createPost);
-router.put("/:id", requireAuth, updatePost);
-router.delete("/:id", requireAuth, deletePost);
+router.get("/:id", authenticate, getPost);
+router.put("/:id", authenticate, updatePost);
+router.delete("/:id", authenticate, deletePost);
 
 export default router;

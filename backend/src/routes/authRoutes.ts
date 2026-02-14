@@ -1,16 +1,16 @@
-import { Router } from "express";
-import { auth } from "../lib/auth";
-import { toNodeHandler } from "better-auth/node";
-import { requireAuth } from "../middlewares/authMiddleware";
+import { Router, Request, Response } from "express";
+import { authenticate, AuthRequest } from "../middlewares/authMiddleware";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { prisma } from "../lib/prisma";
 
 const router = Router();
 
 /**
  * @swagger
- * /api/auth/sign-in/email:
+ * /api/auth/login:
  *   post:
  *     summary: Login with email and password
- *     description: Authenticate user with email and password credentials using better-auth
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -31,19 +31,49 @@ const router = Router();
  *                 example: admin123
  *     responses:
  *       200:
- *         description: Login successful - Returns user and session
+ *         description: Login successful
  *       400:
- *         description: Invalid email or password
+ *         description: Email and password are required
  *       401:
- *         description: Email or password incorrect
+ *         description: Invalid credentials
+ *       500:
+ *         description: Server error
  */
+
+router.post("/login", async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET as string, { expiresIn: "7d" });
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        res.json({ message: "Login successful", user: { id: user.id, email: user.email } });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
 /**
  * @swagger
- * /api/auth/sign-out:
+ * /api/auth/logout:
  *   post:
  *     summary: Logout user
- *     description: Logout the current authenticated user and clear session
  *     tags:
  *       - Authentication
  *     security:
@@ -51,41 +81,31 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Logged out successfully
- *       401:
- *         description: Unauthorized - No active session
  */
+
+router.post("/logout", (req: AuthRequest, res: Response) => {
+    res.clearCookie("token");
+    res.json({ message: "Logged out successfully" });
+});
 
 /**
  * @swagger
  * /api/auth/me:
  *   get:
- *     summary: Get current user session
- *     description: Retrieve the current authenticated user's session information
+ *     summary: Get current user info
  *     tags:
  *       - Authentication
  *     security:
  *       - cookieAuth: []
  *     responses:
  *       200:
- *         description: User session retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user:
- *                   type: object
- *                 session:
- *                   type: object
+ *         description: Current user information
  *       401:
- *         description: Unauthorized - Invalid or missing session
+ *         description: Unauthorized
  */
 
-router.get("/me", requireAuth, async (req, res) => {
-    return res.json(req.session);
+router.get("/me", authenticate, (req: AuthRequest, res: Response) => {
+    res.json({ user: req.user });
 });
-
-// All other auth endpoints (sign-up disabled, sign-in, etc.)
-router.all("/*splat", toNodeHandler(auth));
 
 export default router;

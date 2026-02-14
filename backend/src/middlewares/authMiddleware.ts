@@ -1,36 +1,22 @@
-import express from "express";
-import { fromNodeHeaders } from "better-auth/node";
-import { auth } from "../lib/auth";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
-declare global {
-    namespace Express {
-        interface Request {
-            user?: any;
-            session?: any;
-        }
-    }
-}
-
-export interface AuthRequest extends express.Request {
+export interface AuthRequest extends Request {
     user?: any;
-    session?: any;
 }
 
-// Middleware untuk cek authentication
-export const requireAuth = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export const authenticate = (req: AuthRequest, res: Response, next: NextFunction) => {
+    const token = req.cookies?.token;
+
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
     try {
-        const session = await auth.api.getSession({
-            headers: fromNodeHeaders(req.headers),
-        });
-
-        if (!session) {
-            return res.status(401).json({ error: "Unauthorized" });
-        }
-
-        req.user = session.user;
-        req.session = session;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+        req.user = decoded;
         next();
     } catch (error) {
-        return res.status(401).json({ error: "Invalid session" });
+        return res.status(401).json({ message: "Invalid token" });
     }
 };

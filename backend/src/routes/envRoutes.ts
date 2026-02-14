@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getEnvs, getEnv, createEnv, updateEnv, deleteEnv } from "../controllers/envController";
-import { requireAuth } from "../middlewares/authMiddleware";
+import { authenticate } from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -48,6 +48,9 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
+
+router.get("/", authenticate, getEnvs);
+router.post("/", authenticate, createEnv);
 
 /**
  * @swagger
@@ -128,10 +131,8 @@ const router = Router();
  *         description: Unauthorized
  */
 
-router.get("/", requireAuth, getEnvs);
-router.get("/:id", requireAuth, getEnv);
-router.post("/", requireAuth, createEnv);
-router.put("/:id", requireAuth, updateEnv);
-router.delete("/:id", requireAuth, deleteEnv);
+router.get("/:id", authenticate, getEnv);
+router.put("/:id", authenticate, updateEnv);
+router.delete("/:id", authenticate, deleteEnv);
 
 export default router;

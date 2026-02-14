@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getUploadSignature } from "../controllers/mediaController";
-import { requireAuth } from "../middlewares/authMiddleware";
+import { authenticate } from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -137,6 +137,7 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
-router.post("/signature", requireAuth, getUploadSignature);
+
+router.post("/signature", authenticate, getUploadSignature);
 
 export default router;

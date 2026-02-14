@@ -23,10 +23,6 @@ app.use("/api/envs", envRoutes);
 app.use("/api/media", mediaRoutes);
 app.use("/api/tags", tagRoutes);
 
-app.use("/api/auth/sign-up/email", (req, res) => {
-    res.status(403).json({ error: "Registration is disabled" });
-});
-
 const swaggerSpec = swaggerJSDoc({
     definition: {
         openapi: "3.1.0",
@@ -35,7 +31,7 @@ const swaggerSpec = swaggerJSDoc({
             version: "1.0.0",
         },
     },
-    apis: ["./src/routes/*.ts"], // scan komentar di folder ini
+    apis: ["./src/routes/*.ts"],
 });
 
 app.use(
