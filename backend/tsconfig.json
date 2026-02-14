@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
-        "target": "ES2020", // lebih modern agar dukung import/export
-        "module": "ESNext", // gunakan ESM, bukan commonjs
-        "moduleResolution": "node", // pastikan resolusi modul sesuai Node
+        "target": "ES2020", // dukung import/export modern
+        "module": "ESNext", // gunakan ESM
+        "moduleResolution": "node", // resolusi modul ala Node
+        "resolveJsonModule": true, // opsional, kalau ada import JSON
+        "allowImportingTsExtensions": true, // biar bisa import langsung .ts
         "jsx": "preserve",
         "allowJs": true,
         "outDir": "./dist",
