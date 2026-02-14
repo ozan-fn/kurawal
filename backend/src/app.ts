@@ -1,5 +1,6 @@
 import express, { type Express, Request, Response } from "express";
 import cookieParser from "cookie-parser";
+import { apiReference } from "@scalar/express-api-reference";
 
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -22,8 +23,7 @@ app.use("/api/tags", tagRoutes);
 
 app.get("/api", async (req: Request, res: Response) => {
     try {
-        const { apiReference } = await import("@scalar/express-api-reference");
-        apiReference({ url: "/swagger.json", theme: "moon" })(req, res);
+        apiReference({ url: "/swagger.json", theme: "saturn" })(req, res);
     } catch (error) {
         console.error("Error loading API documentation:", error);
         res.status(500).json({ error: "Failed to load API documentation" });
