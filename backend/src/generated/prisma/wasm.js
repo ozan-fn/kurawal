@@ -171,7 +171,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\Project\\kurawal\\backend\\src\\generated\\prisma",
+      "value": "/home/zann/pengprojekan/kurawal/backend/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -180,12 +180,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\Project\\kurawal\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/zann/pengprojekan/kurawal/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -199,6 +199,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mongodb",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
