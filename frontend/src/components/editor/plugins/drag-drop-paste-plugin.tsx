@@ -10,10 +10,21 @@
 import { useEffect } from "react"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { DRAG_DROP_PASTE } from "@lexical/rich-text"
-import { isMimeType, mediaFileReader } from "@lexical/utils"
-import { COMMAND_PRIORITY_LOW } from "lexical"
+import { $wrapNodeInElement, isMimeType } from "@lexical/utils"
+import {
+  $createParagraphNode,
+  $getNodeByKey,
+  $insertNodes,
+  $isRootOrShadowRoot,
+  COMMAND_PRIORITY_LOW,
+} from "lexical"
+import { toast } from "sonner"
 
-import { INSERT_IMAGE_COMMAND } from "@/components/editor/plugins/images-plugin"
+import {
+  $createImageNode,
+  $isImageNode,
+} from "@/components/editor/nodes/image-node"
+import { uploadToCloudinary } from "@/utils/cloudinary"
 
 const ACCEPTABLE_IMAGE_TYPES = [
   "image/",
@@ -30,16 +41,71 @@ export function DragDropPastePlugin(): null {
       DRAG_DROP_PASTE,
       (files) => {
         ;(async () => {
-          const filesResult = await mediaFileReader(
-            files,
-            [ACCEPTABLE_IMAGE_TYPES].flatMap((x) => x)
-          )
-          for (const { file, result } of filesResult) {
+          for (const file of files) {
             if (isMimeType(file, ACCEPTABLE_IMAGE_TYPES)) {
-              editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-                altText: file.name,
-                src: result,
+              // 1. Create a local preview URL
+              const previewUrl = URL.createObjectURL(file)
+              let nodeKey: string | null = null
+
+              // 2. Insert image node immediately with local preview & uploading state
+              editor.update(() => {
+                const imageNode = $createImageNode({
+                  altText: file.name,
+                  src: previewUrl,
+                  isUploading: true,
+                  uploadProgress: 0,
+                })
+                $insertNodes([imageNode])
+                if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
+                  $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd()
+                }
+                nodeKey = imageNode.getKey()
               })
+
+              try {
+                // 3. Upload to Cloudinary with progress tracking
+                const result = await uploadToCloudinary(file, {
+                  onProgress: ({ percent }) => {
+                    if (nodeKey) {
+                      editor.update(() => {
+                        const node = $getNodeByKey(nodeKey!)
+                        if ($isImageNode(node)) {
+                          node.setUploadProgress(percent)
+                        }
+                      })
+                    }
+                  },
+                })
+
+                if (result?.secure_url) {
+                  // 4. Update image node with real Cloudinary URL & remove overlay
+                  editor.update(() => {
+                    if (nodeKey) {
+                      const node = $getNodeByKey(nodeKey!)
+                      if ($isImageNode(node)) {
+                        node.setSrc(result.secure_url)
+                        node.setIsUploading(false)
+                        node.setUploadProgress(100)
+                      }
+                    }
+                  })
+                  toast.success("Image uploaded successfully")
+                } else {
+                  throw new Error("Missing secure_url from upload response")
+                }
+              } catch (error) {
+                console.error("Error uploading dragged/pasted image:", error)
+                toast.error(`Failed to upload ${file.name}`)
+                // Remove node if upload failed
+                editor.update(() => {
+                  if (nodeKey) {
+                    const node = $getNodeByKey(nodeKey!)
+                    if ($isImageNode(node)) {
+                      node.remove()
+                    }
+                  }
+                })
+              }
             }
           }
         })()

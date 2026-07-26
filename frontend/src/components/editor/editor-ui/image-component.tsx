@@ -71,7 +71,7 @@ function BrokenImage(): JSX.Element {
 	);
 }
 
-export default function ImageComponent({ src, altText, nodeKey, width, height, maxWidth, resizable, showCaption, caption, captionsEnabled }: { altText: string; caption: LexicalEditor; height: "inherit" | number; maxWidth: number; nodeKey: NodeKey; resizable: boolean; showCaption: boolean; src: string; width: "inherit" | number; captionsEnabled: boolean }): JSX.Element {
+export default function ImageComponent({ src, altText, nodeKey, width, height, maxWidth, resizable, showCaption, caption, captionsEnabled, isUploading, uploadProgress = 0 }: { altText: string; caption: LexicalEditor; height: "inherit" | number; maxWidth: number; nodeKey: NodeKey; resizable: boolean; showCaption: boolean; src: string; width: "inherit" | number; captionsEnabled: boolean; isUploading?: boolean; uploadProgress?: number }): JSX.Element {
 	const imageRef = useRef<null | HTMLImageElement>(null);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
@@ -256,7 +256,24 @@ export default function ImageComponent({ src, altText, nodeKey, width, height, m
 	return (
 		<Suspense fallback={null}>
 			<>
-				<div draggable={draggable}>{isLoadError ? <BrokenImage /> : <LazyImage className={`max-w-full cursor-default ${isFocused ? `${$isNodeSelection(selection) ? "draggable cursor-grab active:cursor-grabbing" : ""} focused ring-primary ring-2 ring-offset-2` : null}`} src={src} altText={altText} imageRef={imageRef} width={width} height={height} maxWidth={maxWidth} onError={() => setIsLoadError(true)} />}</div>
+				<div draggable={draggable} className="relative inline-block overflow-hidden rounded-lg">
+					{isLoadError ? <BrokenImage /> : <LazyImage className={`max-w-full cursor-default ${isFocused ? `${$isNodeSelection(selection) ? "draggable cursor-grab active:cursor-grabbing" : ""} focused ring-primary ring-2 ring-offset-2` : null}`} src={src} altText={altText} imageRef={imageRef} width={width} height={height} maxWidth={maxWidth} onError={() => setIsLoadError(true)} />}
+
+					{isUploading && (
+						<div className="bg-black/60 absolute inset-0 flex items-center justify-center rounded-lg backdrop-blur-[2px] transition-opacity duration-200">
+							<div className="flex flex-col items-center gap-2 p-3 text-white">
+								<div className="relative flex h-12 w-12 items-center justify-center">
+									<svg className="h-12 w-12 -rotate-90" viewBox="0 0 36 36">
+										<path d="M18 2.0845a15.9155 15.9155 0 1 1 0 31.831a15.9155 15.9155 0 1 1 0-31.831" fill="none" stroke="currentColor" strokeWidth="3" className="text-white/20" />
+										<path d="M18 2.0845a15.9155 15.9155 0 1 1 0 31.831a15.9155 15.9155 0 1 1 0-31.831" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray={`${uploadProgress}, 100`} strokeLinecap="round" className="stroke-white transition-all duration-150" />
+									</svg>
+									<span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">{Math.round(uploadProgress)}%</span>
+								</div>
+								<p className="text-xs font-medium text-white/90">Uploading...</p>
+							</div>
+						</div>
+					)}
+				</div>
 
 				{showCaption && (
 					<div className="image-caption-container absolute right-0 bottom-1 left-0 m-0 block min-w-[100px] overflow-hidden border-t bg-white/90 p-0">
