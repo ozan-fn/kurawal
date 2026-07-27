@@ -231,9 +231,29 @@ export const renderContent = (contentString: string) => {
 		}
 
 		if (node.type === "image") {
-			const imageNode = node as { src?: string; altText?: string };
+			const imageNode = node as {
+				src?: string;
+				altText?: string;
+				width?: number | string;
+				height?: number | string;
+			};
+
+			const widthVal = typeof imageNode.width === "number" ? imageNode.width : typeof imageNode.width === "string" && !isNaN(Number(imageNode.width)) ? Number(imageNode.width) : 0;
+			const heightVal = typeof imageNode.height === "number" ? imageNode.height : typeof imageNode.height === "string" && !isNaN(Number(imageNode.height)) ? Number(imageNode.height) : 0;
+
+			const style: React.CSSProperties = {};
+			if (widthVal > 0) style.width = `${widthVal}px`;
+			if (heightVal > 0) style.height = `${heightVal}px`;
+
 			return (
-				<img key={index} src={imageNode.src} alt={imageNode.altText || ""} className="mb-4 max-w-full" loading="lazy" />
+				<img
+					key={index}
+					src={imageNode.src}
+					alt={imageNode.altText || ""}
+					style={Object.keys(style).length > 0 ? style : undefined}
+					className="mb-4 max-w-full h-auto rounded-lg"
+					loading="lazy"
+				/>
 			);
 		}
 

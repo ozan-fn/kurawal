@@ -11,7 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Filter, ArrowUpDown, MoreHorizontal, Eye, Pencil, Trash2, FileText, Archive, CheckCircle2, Clock } from "lucide-react";
+import { Plus, Search, Filter, ArrowUpDown, MoreHorizontal, Eye, Pencil, Trash2, FileText, Archive, CheckCircle2, Clock, ExternalLink } from "lucide-react";
 
 interface Post {
 	id: string;
@@ -21,6 +21,7 @@ interface Post {
 	status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
 	createdAt: string;
 	tagIds?: string[];
+	slug?: string | null;
 }
 
 export default function AdminPostsPage() {
@@ -256,13 +257,13 @@ export default function AdminPostsPage() {
 									<TableRow key={p.id} className="group">
 										<TableCell className="text-muted-foreground">{index + 1}</TableCell>
 
-										<TableCell>
+										<TableCell className="max-w-4xl">
 											<div className="flex items-center gap-3">
 												<div className="bg-muted h-11 w-11 overflow-hidden rounded-lg border">{p.thumbnail ? <img src={p.thumbnail} alt={p.title} className="h-full w-full object-cover" /> : null}</div>
 
-												<div>
-													<p className="font-medium">{p.title}</p>
-													<p className="text-muted-foreground line-clamp-1 text-xs">{p.description || "No description"}</p>
+												<div className="min-w-0 flex-1">
+													<p className="font-medium truncate">{p.title}</p>
+													<p className="text-muted-foreground line-clamp-1 text-xs mask-r-from-0%">{p.description || "No description"}</p>
 												</div>
 											</div>
 										</TableCell>
@@ -288,6 +289,13 @@ export default function AdminPostsPage() {
 												</DropdownMenuTrigger>
 
 												<DropdownMenuContent align="end">
+													<DropdownMenuItem asChild>
+														<Link to={`/blogs/${p.slug ?? p.id}`} target="_blank" rel="noopener noreferrer">
+															<ExternalLink className="mr-2 h-4 w-4" />
+															Live
+														</Link>
+													</DropdownMenuItem>
+
 													<DropdownMenuItem asChild>
 														<Link to={`/dashboard/posts/detail/${p.id}`}>
 															<Eye className="mr-2 h-4 w-4" />

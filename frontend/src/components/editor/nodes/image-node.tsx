@@ -26,6 +26,8 @@ export interface ImagePayload {
   src: string
   width?: number
   captionsEnabled?: boolean
+  isUploading?: boolean
+  uploadProgress?: number
 }
 
 function isGoogleDocCheckboxImg(img: HTMLImageElement): boolean {
@@ -70,6 +72,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   __caption: LexicalEditor
   // Captions cannot yet be used within editor cells
   __captionsEnabled: boolean
+  __isUploading: boolean
+  __uploadProgress: number
 
   static getType(): string {
     return "image"
@@ -85,6 +89,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       node.__showCaption,
       node.__caption,
       node.__captionsEnabled,
+      node.__isUploading,
+      node.__uploadProgress,
       node.__key
     )
   }
@@ -136,6 +142,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     showCaption?: boolean,
     caption?: LexicalEditor,
     captionsEnabled?: boolean,
+    isUploading?: boolean,
+    uploadProgress?: number,
     key?: NodeKey
   ) {
     super(key)
@@ -151,6 +159,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
         nodes: [],
       })
     this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined
+    this.__isUploading = isUploading || false
+    this.__uploadProgress = uploadProgress || 0
   }
 
   exportJSON(): SerializedImageNode {
@@ -179,6 +189,29 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   setShowCaption(showCaption: boolean): void {
     const writable = this.getWritable()
     writable.__showCaption = showCaption
+  }
+
+  setSrc(src: string): void {
+    const writable = this.getWritable()
+    writable.__src = src
+  }
+
+  setIsUploading(isUploading: boolean): void {
+    const writable = this.getWritable()
+    writable.__isUploading = isUploading
+  }
+
+  setUploadProgress(uploadProgress: number): void {
+    const writable = this.getWritable()
+    writable.__uploadProgress = uploadProgress
+  }
+
+  getIsUploading(): boolean {
+    return this.__isUploading
+  }
+
+  getUploadProgress(): number {
+    return this.__uploadProgress
   }
 
   // View
@@ -219,6 +252,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
           caption={this.__caption}
           captionsEnabled={this.__captionsEnabled}
           resizable={true}
+          isUploading={this.__isUploading}
+          uploadProgress={this.__uploadProgress}
         />
       </Suspense>
     )
@@ -234,6 +269,8 @@ export function $createImageNode({
   width,
   showCaption,
   caption,
+  isUploading,
+  uploadProgress,
   key,
 }: ImagePayload): ImageNode {
   return $applyNodeReplacement(
@@ -246,6 +283,8 @@ export function $createImageNode({
       showCaption,
       caption,
       captionsEnabled,
+      isUploading,
+      uploadProgress,
       key
     )
   )
